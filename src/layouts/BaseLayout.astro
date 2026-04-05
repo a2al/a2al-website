@@ -1,20 +1,29 @@
 ---
 import '../styles/global.css'
+import type { Locale } from '@/i18n/config'
+import { localizePath } from '@/i18n/paths'
+import { strings } from '@/i18n/strings'
+import LanguageSwitcher from '@/components/LanguageSwitcher.astro'
 
 interface Props {
+  locale: Locale
+  pathKey: '/' | '/about' | '/quickstart'
   title: string
   description?: string
 }
 
-const { title, description = 'A2AL — Decentralized networking protocol for AI agents.' } = Astro.props
+const { locale, pathKey, title, description } = Astro.props
+const tr = strings[locale]
+const desc = description ?? tr.meta.siteDescription
+const p = (path: string) => localizePath(locale, path)
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={tr.htmlLang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
+    <meta name="description" content={desc} />
     <title>{title} — A2AL</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -26,22 +35,26 @@ const { title, description = 'A2AL — Decentralized networking protocol for AI 
   </head>
   <body>
     <nav class="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
-      <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a href="/" class="text-white font-semibold text-lg tracking-tight hover:text-accent transition-colors">
+      <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+        <a href={p('/')} class="text-white font-semibold text-lg tracking-tight hover:text-accent transition-colors shrink-0">
           A2AL
         </a>
-        <div class="hidden md:flex items-center gap-8">
-          <a href="/quickstart" class="text-text-secondary hover:text-white text-sm transition-colors">Quick Start</a>
-          <a href="/docs/integration/overview" class="text-text-secondary hover:text-white text-sm transition-colors">Docs</a>
-          <a href="/about" class="text-text-secondary hover:text-white text-sm transition-colors">About</a>
+        <div class="hidden md:flex items-center gap-6">
+          <a href={p('/quickstart')} class="text-text-secondary hover:text-white text-sm transition-colors">{tr.nav.quickstart}</a>
+          <a href="/docs/integration/overview" class="text-text-secondary hover:text-white text-sm transition-colors">{tr.nav.docs}</a>
+          <a href={p('/about')} class="text-text-secondary hover:text-white text-sm transition-colors">{tr.nav.about}</a>
+          <LanguageSwitcher locale={locale} pathKey={pathKey} />
           <a
             href="https://github.com/a2al/a2al"
             target="_blank"
             rel="noopener"
             class="text-text-secondary hover:text-white text-sm transition-colors"
           >
-            GitHub ↗
+            {tr.nav.github}
           </a>
+        </div>
+        <div class="flex md:hidden items-center gap-2">
+          <LanguageSwitcher locale={locale} pathKey={pathKey} />
         </div>
       </div>
     </nav>
@@ -54,20 +67,23 @@ const { title, description = 'A2AL — Decentralized networking protocol for AI 
       <div class="max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-start gap-8">
         <div>
           <div class="text-white font-semibold mb-2">A2AL</div>
-          <div class="text-text-secondary text-sm">Decentralized networking protocol for AI agents.</div>
-          <div class="text-text-secondary text-sm mt-1">Part of <a href="https://tanglednet.org" class="hover:text-accent transition-colors">Tangled Network</a>.</div>
+          <div class="text-text-secondary text-sm">{tr.footer.tagline}</div>
+          <div class="text-text-secondary text-sm mt-1">
+            {tr.footer.tangled}{' '}
+            <a href="https://tanglednet.org" class="hover:text-accent transition-colors">Tangled Network</a>.
+          </div>
         </div>
         <div class="flex gap-12 text-sm">
           <div class="flex flex-col gap-3">
-            <div class="text-white font-medium">Resources</div>
-            <a href="/quickstart" class="text-text-secondary hover:text-white transition-colors">Quick Start</a>
-            <a href="/docs/integration/overview" class="text-text-secondary hover:text-white transition-colors">Docs</a>
-            <a href="/llms.txt" class="text-text-secondary hover:text-white transition-colors">llms.txt</a>
+            <div class="text-white font-medium">{tr.footer.resources}</div>
+            <a href={p('/quickstart')} class="text-text-secondary hover:text-white transition-colors">{tr.footer.quickstart}</a>
+            <a href="/docs/integration/overview" class="text-text-secondary hover:text-white transition-colors">{tr.footer.docs}</a>
+            <a href="/llms.txt" class="text-text-secondary hover:text-white transition-colors">{tr.footer.llms}</a>
           </div>
           <div class="flex flex-col gap-3">
-            <div class="text-white font-medium">Project</div>
-            <a href="/about" class="text-text-secondary hover:text-white transition-colors">About</a>
-            <a href="https://github.com/a2al/a2al" class="text-text-secondary hover:text-white transition-colors" target="_blank" rel="noopener">GitHub ↗</a>
+            <div class="text-white font-medium">{tr.footer.project}</div>
+            <a href={p('/about')} class="text-text-secondary hover:text-white transition-colors">{tr.footer.about}</a>
+            <a href="https://github.com/a2al/a2al" class="text-text-secondary hover:text-white transition-colors" target="_blank" rel="noopener">{tr.footer.github}</a>
           </div>
         </div>
       </div>
