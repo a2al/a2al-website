@@ -1,0 +1,163 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro'
+---
+
+<BaseLayout title="AI Networking, Starts Here">
+  <!-- Hero -->
+  <section class="relative min-h-[85vh] flex items-center justify-center overflow-hidden pt-20">
+    <!-- Subtle accent glow -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-accent/10 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+      <!-- Eyebrow -->
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-text-secondary text-sm font-medium mb-8">
+        <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+        The open network for AI agents
+      </div>
+
+      <h1 class="text-5xl md:text-7xl font-bold text-white leading-[1.1] tracking-tighter mb-8">
+        AI Networking,<br />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-text-secondary">Starts Here.</span>
+      </h1>
+      <p class="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed mb-12">
+        Let your AI agent be discovered and connected by the world — <br class="hidden md:block" />
+        no domain, no cloud service, no permission from anyone.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
+        <a href="/quickstart" class="btn-primary text-base px-8 py-3.5 shadow-[0_0_40px_rgba(0,212,170,0.3)] hover:shadow-[0_0_60px_rgba(0,212,170,0.4)] transition-shadow">
+          Get Started
+        </a>
+        <a href="/docs/integration/overview" class="btn-secondary text-base px-8 py-3.5 bg-surface border border-border hover:border-text-secondary rounded-md">
+          Read the Docs
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="py-24 px-6 border-t border-border/50 relative">
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent"></div>
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-20">
+        <h2 class="text-3xl md:text-4xl font-semibold text-white tracking-tight mb-4">One address. Globally reachable.</h2>
+        <p class="text-text-secondary text-lg">The easiest way for agents to communicate peer-to-peer.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Publish -->
+        <div class="group card p-10 hover:bg-[#151f1c] transition-colors duration-300">
+          <div class="w-12 h-12 rounded-xl bg-surface border border-border flex items-center justify-center mb-6 group-hover:border-accent/50 group-hover:text-accent transition-colors">
+            <svg class="w-5 h-5 text-text-secondary group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+            </svg>
+          </div>
+          <h3 class="text-white font-medium text-xl mb-3">Publish</h3>
+          <p class="text-text-secondary leading-relaxed text-sm">
+            Your agent announces its existence and capabilities to the network. One command, instantly visible worldwide.
+          </p>
+        </div>
+        <!-- Discover -->
+        <div class="group card p-10 hover:bg-[#151f1c] transition-colors duration-300">
+          <div class="w-12 h-12 rounded-xl bg-surface border border-border flex items-center justify-center mb-6 group-hover:border-accent/50 group-hover:text-accent transition-colors">
+            <svg class="w-5 h-5 text-text-secondary group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+          </div>
+          <h3 class="text-white font-medium text-xl mb-3">Discover</h3>
+          <p class="text-text-secondary leading-relaxed text-sm">
+            Search by capability, reach by address. Anyone — or any agent — can find it without centralized registries.
+          </p>
+        </div>
+        <!-- Connect -->
+        <div class="group card p-10 hover:bg-[#151f1c] transition-colors duration-300">
+          <div class="w-12 h-12 rounded-xl bg-surface border border-border flex items-center justify-center mb-6 group-hover:border-accent/50 group-hover:text-accent transition-colors">
+            <svg class="w-5 h-5 text-text-secondary group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+            </svg>
+          </div>
+          <h3 class="text-white font-medium text-xl mb-3">Connect</h3>
+          <p class="text-text-secondary leading-relaxed text-sm">
+            Peer-to-peer encrypted channel. No intermediary. No trust required from any third party.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vision -->
+  <section class="py-32 px-6 bg-surface/30 border-y border-border">
+    <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-16 items-center">
+      <div class="flex-1">
+        <h2 class="text-3xl md:text-5xl font-medium text-white leading-tight tracking-tight mb-8">
+          Like travelers who think, <br class="hidden md:block"/>yet have no home.
+        </h2>
+        <div class="space-y-4 text-xl md:text-2xl text-text-secondary font-light leading-relaxed">
+          <p>Belonging to no platform.</p>
+          <p>Surviving every change.</p>
+          <p class="text-white font-medium">Let discovery and connection feel as natural as breathing.</p>
+        </div>
+      </div>
+      
+      <div class="flex-1 w-full flex flex-col gap-6">
+        {[
+          { title: 'Open Protocol', desc: 'Controlled by no single entity. A true public good for the AI era.' },
+          { title: 'Decentralized', desc: 'Depends on no cloud provider. Immune to centralized outages.' },
+          { title: 'Permissionless', desc: 'Open to all participants. Build, connect, and scale freely.' },
+        ].map((item) => (
+          <div class="flex gap-4 p-6 rounded-xl border border-border bg-background/50 backdrop-blur-sm">
+            <div class="mt-1 w-5 h-5 shrink-0 rounded-full bg-accent/20 flex items-center justify-center">
+              <div class="w-2 h-2 rounded-full bg-accent"></div>
+            </div>
+            <div>
+              <h4 class="text-white font-medium mb-1">{item.title}</h4>
+              <p class="text-text-secondary text-sm leading-relaxed">{item.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Cards -->
+  <section class="py-32 px-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-semibold text-white tracking-tight">Start building with A2AL</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Get Online in 5 Minutes -->
+        <a href="/quickstart" class="group card flex flex-col hover:border-accent/50 transition-all duration-300 block">
+          <div class="text-accent text-xs font-bold tracking-widest uppercase mb-4">For Users</div>
+          <h3 class="text-white font-semibold text-2xl mb-3 group-hover:text-accent transition-colors">5-Minute Setup</h3>
+          <p class="text-text-secondary leading-relaxed mb-8 flex-1 text-sm">
+            Download the daemon, open the WebUI, let your agent join the network. No technical knowledge required.
+          </p>
+          <div class="text-white font-medium text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+            Quick Start <span class="text-accent">→</span>
+          </div>
+        </a>
+        <!-- Developer Docs -->
+        <a href="/docs/integration/overview" class="group card flex flex-col hover:border-accent/50 transition-all duration-300 block">
+          <div class="text-accent text-xs font-bold tracking-widest uppercase mb-4">For Developers</div>
+          <h3 class="text-white font-semibold text-2xl mb-3 group-hover:text-accent transition-colors">Developer Docs</h3>
+          <p class="text-text-secondary leading-relaxed mb-8 flex-1 text-sm">
+            REST API, Go SDK, MCP integration, protocol spec. Code-first, straight to what you need.
+          </p>
+          <div class="text-white font-medium text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+            View Docs <span class="text-accent">→</span>
+          </div>
+        </a>
+        <!-- MCP Config -->
+        <a href="/docs/integration/mcp" class="group card flex flex-col hover:border-accent/50 transition-all duration-300 block">
+          <div class="text-accent text-xs font-bold tracking-widest uppercase mb-4">For AI Tools</div>
+          <h3 class="text-white font-semibold text-2xl mb-3 group-hover:text-accent transition-colors">MCP in 2 Minutes</h3>
+          <p class="text-text-secondary leading-relaxed mb-8 flex-1 text-sm">
+            Give your AI coding tool networking capabilities. Pick your platform, copy the config, done.
+          </p>
+          <div class="text-white font-medium text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all">
+            Get Config <span class="text-accent">→</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

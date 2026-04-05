@@ -1,0 +1,49 @@
+/* Theme-independent variables */
+:root {
+  --sl-font: 'Inter', system-ui, sans-serif;
+  --sl-font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --sl-color-accent: #00d4aa;
+  --sl-color-accent-high: #00b894;
+}
+
+/* Dark theme */
+:root[data-theme='dark'],
+[data-theme='dark'] {
+  --sl-color-bg: #0a0f0e;
+  --sl-color-bg-nav: #0a0f0e;
+  --sl-color-bg-sidebar: #0d1210;
+  --sl-color-hairline: #1e2422;
+  --sl-color-hairline-light: #1e2422;
+  --sl-color-black: #0a0f0e;
+  --sl-color-white: #e8f0ee;
+  --sl-color-gray-1: #c8d8d4;
+  --sl-color-gray-2: #a0b0ac;
+  --sl-color-gray-3: #607870;
+  --sl-color-gray-4: #3a4a46;
+  --sl-color-gray-5: #243028;
+  --sl-color-gray-6: #1e2422;
+}
+
+/* Light theme */
+:root[data-theme='light'],
+[data-theme='light'] {
+  --sl-color-bg: #f8faf9;
+  --sl-color-bg-nav: #ffffff;
+  --sl-color-bg-sidebar: #f0f5f3;
+  --sl-color-hairline: #dde8e4;
+  --sl-color-hairline-light: #eef3f1;
+  --sl-color-black: #f8faf9;
+  --sl-color-white: #0d1e1a;
+  --sl-color-gray-1: #1a2e28;
+  --sl-color-gray-2: #2a4038;
+  --sl-color-gray-3: #4a6860;
+  --sl-color-gray-4: #8aada6;
+  --sl-color-gray-5: #c4d8d4;
+  --sl-color-gray-6: #dde8e4;
+}
+
+/* Sidebar active item — dark text on accent background for contrast */
+[aria-current='page'],
+[aria-current='page']:hover {
+  color: #0a0f0e !important;
+}

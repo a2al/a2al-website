@@ -1,0 +1,76 @@
+---
+import '../styles/global.css'
+
+interface Props {
+  title: string
+  description?: string
+}
+
+const { title, description = 'A2AL — Decentralized networking protocol for AI agents.' } = Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title} — A2AL</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-sm">
+      <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <a href="/" class="text-white font-semibold text-lg tracking-tight hover:text-accent transition-colors">
+          A2AL
+        </a>
+        <div class="hidden md:flex items-center gap-8">
+          <a href="/quickstart" class="text-text-secondary hover:text-white text-sm transition-colors">Quick Start</a>
+          <a href="/docs/integration/overview" class="text-text-secondary hover:text-white text-sm transition-colors">Docs</a>
+          <a href="/about" class="text-text-secondary hover:text-white text-sm transition-colors">About</a>
+          <a
+            href="https://github.com/a2al/a2al"
+            target="_blank"
+            rel="noopener"
+            class="text-text-secondary hover:text-white text-sm transition-colors"
+          >
+            GitHub ↗
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="border-t border-border mt-32">
+      <div class="max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-start gap-8">
+        <div>
+          <div class="text-white font-semibold mb-2">A2AL</div>
+          <div class="text-text-secondary text-sm">Decentralized networking protocol for AI agents.</div>
+          <div class="text-text-secondary text-sm mt-1">Part of <a href="https://tanglednet.org" class="hover:text-accent transition-colors">Tangled Network</a>.</div>
+        </div>
+        <div class="flex gap-12 text-sm">
+          <div class="flex flex-col gap-3">
+            <div class="text-white font-medium">Resources</div>
+            <a href="/quickstart" class="text-text-secondary hover:text-white transition-colors">Quick Start</a>
+            <a href="/docs/integration/overview" class="text-text-secondary hover:text-white transition-colors">Docs</a>
+            <a href="/llms.txt" class="text-text-secondary hover:text-white transition-colors">llms.txt</a>
+          </div>
+          <div class="flex flex-col gap-3">
+            <div class="text-white font-medium">Project</div>
+            <a href="/about" class="text-text-secondary hover:text-white transition-colors">About</a>
+            <a href="https://github.com/a2al/a2al" class="text-text-secondary hover:text-white transition-colors" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
