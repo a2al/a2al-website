@@ -164,6 +164,19 @@ const tabIdle =
           </p>
         </div>
       </div>
+
+      <!-- Success Message -->
+      <div class="flex items-center justify-center py-6">
+        <div class="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-accent/5 border border-accent/20 text-accent text-lg font-medium shadow-[0_0_30px_rgba(0,212,170,0.1)] backdrop-blur-sm relative">
+          <div class="absolute inset-0 rounded-full border border-accent/30 animate-pulse"></div>
+          <div class="w-7 h-7 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
+            <svg class="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
+          <span>{tr.quickstart.successMessage}</span>
+        </div>
+      </div>
     </div>
 
     <div class="mt-24 p-10 rounded-2xl bg-gradient-to-br from-surface/80 to-background border border-border relative overflow-hidden">

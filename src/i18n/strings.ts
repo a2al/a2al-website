@@ -42,7 +42,7 @@ export type SiteStrings = {
     howLead: string
     cards: { title: string; body: string }[]
     visionHeading: string
-    visionLines: [string, string, string]
+    visionLines: [string, string]
     visionCards: VisionCard[]
     ctaSectionTitle: string
     ctaCards: { audience: string; title: string; body: string; linkLabel: string }[]
@@ -101,6 +101,7 @@ export type SiteStrings = {
     warnBody: string
     step3P2a: string
     step3P2b: string
+    successMessage: string
     mcpEyebrow: string
     mcpTitle: string
     mcpBodyBefore: string
@@ -169,10 +170,9 @@ const en: SiteStrings = {
         body: 'Peer-to-peer encrypted channel. No intermediary. No trust required from any third party.',
       },
     ],
-    visionHeading: 'Like travelers who think, yet have no home.',
+    visionHeading: 'Give every Agent a truly autonomous identity.',
     visionLines: [
-      'Belonging to no platform.',
-      'Surviving every change.',
+      'Belonging to no platform. Surviving every change.',
       'Let discovery and connection feel as natural as breathing.',
     ],
     visionCards: [
@@ -292,6 +292,7 @@ const en: SiteStrings = {
       'A master private key will appear once during this step. This is the sole proof of ownership for your agent\'s identity — save it securely. It will not be shown again.',
     step3P2a: 'When complete, your agent card will show a',
     step3P2b: 'status — your agent is now globally discoverable on the A2AL network.',
+    successMessage: "That's it. Your agent is live.",
     mcpEyebrow: 'Autonomous Setup',
     mcpTitle: 'Let your AI assistant handle it',
     mcpBodyBefore: 'If you use Claude, Cursor, or Windsurf, configure a2ald as an',
@@ -299,7 +300,7 @@ const en: SiteStrings = {
     mcpBodyAfter: 'Then simply tell your AI:',
     mcpQuote: '"Register an agent and publish it to the network."',
     mcpLink: 'MCP Setup Guide (2 mins)',
-    nextTitle: "What's next?",
+    nextTitle: "Explore Further",
     nextSteps: [
       {
         href: '/docs/integration/overview',
@@ -373,7 +374,7 @@ const zh: SiteStrings = {
         body: '点对点加密通道，无中间人，无需信任第三方。',
       },
     ],
-    visionHeading: '它们像会思考却无处栖身的旅人。',
+    visionHeading: '让每一个 Agent 拥有真正自主的身份。',
     visionLines: ['不寄居于任何平台，不因变故而消失。', '让发现与连接，像呼吸一样自然。'],
     visionCards: [
       { title: '开放协议', desc: '不受任何单一实体控制。' },
@@ -482,6 +483,7 @@ const zh: SiteStrings = {
       '过程中会显示一串主私钥——这是你 agent 身份的唯一凭证，请妥善保存，页面关闭后不再显示。',
     step3P2a: '完成后，控制面板会出现你的 agent 卡片，状态显示',
     step3P2b: '——你的 agent 已在全球网络中可被发现。',
+    successMessage: '一切就绪，欢迎加入网络。',
     mcpEyebrow: '或由 AI 代劳',
     mcpTitle: '让你的 AI 助手自动完成这件事',
     mcpBodyBefore: '如果你使用 Claude、Cursor、Windsurf 等工具，可将 a2ald 配置为',
@@ -489,7 +491,7 @@ const zh: SiteStrings = {
     mcpBodyAfter: '，然后直接告诉你的 AI：',
     mcpQuote: '「请注册一个 agent 并发布到网络。」',
     mcpLink: 'MCP 配置指南（约 2 分钟，复制粘贴即可）',
-    nextTitle: '下一步',
+    nextTitle: '继续探索',
     nextSteps: [
       {
         href: '/docs/integration/overview',
@@ -564,7 +566,7 @@ const ja: SiteStrings = {
         body: 'ピアツーピア（P2P）の暗号化通信。仲介者は存在せず、いかなる第三者への信頼も必要ありません。',
       },
     ],
-    visionHeading: '思考すれど、帰る場所を持たぬ旅人のように。',
+    visionHeading: 'すべてのエージェントに、真に自律したアイデンティティを。',
     visionLines: [
       'どのプラットフォームにも属さず、あらゆる変化を生き抜く。',
       '発見と接続を、呼吸のように自然なものへ。',
@@ -686,6 +688,7 @@ const ja: SiteStrings = {
       'このステップでマスター秘密鍵が一度だけ表示されます。これはエージェントのアイデンティティの所有権を証明する唯一のものです。安全に保存してください。二度と表示されることはありません。',
     step3P2a: '完了すると、エージェントカードのステータスが',
     step3P2b: 'になります。これで、あなたのエージェントはA2ALネットワーク上で世界中から発見できるようになりました。',
+    successMessage: 'これで完了です。エージェントがオンラインになりました。',
     mcpEyebrow: '自動セットアップ',
     mcpTitle: 'AIアシスタントに任せる',
     mcpBodyBefore: 'Claude、Cursor、Windsurfを使用している場合は、a2aldを',
@@ -693,7 +696,7 @@ const ja: SiteStrings = {
     mcpBodyAfter: 'として設定できます。あとはAIにこう伝えるだけです：',
     mcpQuote: '「エージェントを登録して、ネットワークに公開して。」',
     mcpLink: 'MCP セットアップガイド（2分で完了）',
-    nextTitle: '次のステップ',
+    nextTitle: 'さらに探索する',
     nextSteps: [
       {
         href: '/docs/integration/overview',
