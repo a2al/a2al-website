@@ -22,6 +22,7 @@
   --sl-color-gray-4: #3a4a46;
   --sl-color-gray-5: #243028;
   --sl-color-gray-6: #1e2422;
+  --sl-color-accent-low: #0e1a17;
 }
 
 /* Light theme */
@@ -40,9 +41,11 @@
   --sl-color-gray-4: #8aada6;
   --sl-color-gray-5: #c4d8d4;
   --sl-color-gray-6: #dde8e4;
+  --sl-color-accent-low: #d8f5ed;
 }
 
-/* Sidebar active item */
+/* Sidebar active item: white text on subtle accent background for both themes */
 [aria-current='page'] {
-  color: var(--sl-color-accent) !important;
+  color: var(--sl-color-white) !important;
+  font-weight: 600;
 }
