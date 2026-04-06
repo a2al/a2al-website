@@ -245,8 +245,8 @@ const en: SiteStrings = {
     plannedTitle: 'Planned',
     plannedItems: [
       'TURN relay (reliable forwarding in poor network conditions)',
-      'Layer 3 secure tunnel (device-to-device)',
-      'Connection efficiency optimization',
+      'Full-stack transparent tunnel (Transparent Tunnel)',
+      'Node routing optimization',
       'Mobile & edge device support (Android & iOS)',
       'Independent protocol implementations in more languages (Rust / TypeScript / C++)',
     ],
@@ -436,8 +436,8 @@ const zh: SiteStrings = {
     plannedTitle: '计划中',
     plannedItems: [
       'TURN 中继（恶劣网络环境下的可靠转发）',
-      'Layer3 层安全隧道（设备直连）',
-      '连接效率优化',
+      '全栈透明隧道 (Transparent Tunnel)',
+      '节点路由优化',
       '移动终端支持（Android & iOS）',
       '更多语言的独立协议实现（Rust / TypeScript / C++）',
     ],
@@ -640,8 +640,8 @@ const ja: SiteStrings = {
     plannedTitle: '計画中',
     plannedItems: [
       'TURNリレー（悪劣なネットワーク環境下での高信頼性転送）',
-      'Layer 3 セキュアトンネル（デバイス間直接通信）',
-      '接続効率の最適化',
+      'フルスタック透明トンネル（Transparent Tunnel）',
+      'ノードルーティングの最適化',
       'モバイル端末サポート（Android & iOS）',
       '多言語での独立プロトコル実装（Rust / TypeScript / C++）',
     ],
