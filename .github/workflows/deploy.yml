@@ -29,6 +29,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          MAINTENANCE_MODE: ${{ vars.MAINTENANCE_MODE }}
 
       - uses: actions/upload-pages-artifact@v3
         with:

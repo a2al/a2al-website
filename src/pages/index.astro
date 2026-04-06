@@ -1,12 +1,18 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Home from '@/components/marketing/Home.astro'
+import Maintenance from '@/components/Maintenance.astro'
 import { t } from '@/i18n/strings'
 
 const locale = 'en'
 const tr = t(locale)
+const MAINTENANCE = import.meta.env.MAINTENANCE_MODE === 'true'
 ---
 
-<BaseLayout locale={locale} pathKey="/" title={tr.meta.homeTitle} description={tr.meta.homeDescription}>
-  <Home locale={locale} />
-</BaseLayout>
+{MAINTENANCE ? (
+  <Maintenance />
+) : (
+  <BaseLayout locale={locale} pathKey="/" title={tr.meta.homeTitle} description={tr.meta.homeDescription}>
+    <Home locale={locale} />
+  </BaseLayout>
+)}
