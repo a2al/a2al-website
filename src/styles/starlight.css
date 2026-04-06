@@ -42,8 +42,7 @@
   --sl-color-gray-6: #dde8e4;
 }
 
-/* Sidebar active item — dark text on accent background for contrast */
-[aria-current='page'],
-[aria-current='page']:hover {
-  color: #0a0f0e !important;
+/* Sidebar active item */
+[aria-current='page'] {
+  color: var(--sl-color-accent) !important;
 }
