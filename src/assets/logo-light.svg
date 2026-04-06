@@ -1,3 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="80" height="24" viewBox="0 0 80 24" fill="none">
-  <text x="0" y="18" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#0a0f0e" letter-spacing="-0.5">A2AL</text>
+<svg viewBox="0 0 120 28" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+  <g transform="translate(14, 2) skewX(-12)">
+    <!-- A -->
+    <polyline points="2,24 12,2 22,24" />
+    <line x1="7" y1="15" x2="17" y2="15" />
+    <!-- 2 -->
+    <path d="M 32,8 C 32,0 46,0 46,8 C 46,16 32,17 32,24 L 46,24" />
+    <!-- A -->
+    <polyline points="56,24 66,2 76,24" />
+    <line x1="61" y1="15" x2="71" y2="15" />
+    <!-- L -->
+    <polyline points="86,2 86,24 100,24" />
+  </g>
 </svg>
