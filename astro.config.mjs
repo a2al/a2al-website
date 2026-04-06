@@ -1,10 +1,12 @@
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 import tailwind from '@astrojs/tailwind'
+import sitemap from '@astrojs/sitemap'
 
 export default defineConfig({
   site: 'https://a2al.org',
   integrations: [
+    sitemap(),
     tailwind({
       // Apply Tailwind base styles, but let Starlight manage its own styles in /docs
       applyBaseStyles: false,

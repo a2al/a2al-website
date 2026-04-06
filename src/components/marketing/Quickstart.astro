@@ -218,13 +218,9 @@ const tabIdle =
   </div>
 </div>
 
-<script>
+<script define:vars={{ tabActive, tabIdle }}>
   const tabs = document.querySelectorAll('[data-tab]')
   const panels = document.querySelectorAll('[data-panel]')
-  const tabActive =
-    'flex-1 px-5 py-3.5 text-sm font-medium transition-all text-accent border-b-2 border-accent bg-surface/50'
-  const tabIdle =
-    'flex-1 px-5 py-3.5 text-sm font-medium transition-all text-text-secondary hover:text-white hover:bg-surface/30 border-b-2 border-transparent'
 
   tabs.forEach((tab) => {
     tab.addEventListener('click', () => {
