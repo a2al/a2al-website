@@ -33,4 +33,4 @@ Or: discover → resolve → connect → direct encrypted communication with rem
 - ANP: A2AL implements the decentralized agent network ANP envisions
 
 ## Full documentation
-See /llms-full.txt for complete protocol specification and API reference.
+See /llms-full.txt for complete REST API reference, protocol specification, integration guide, and service naming conventions.

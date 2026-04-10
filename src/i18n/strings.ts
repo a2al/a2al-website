@@ -3,6 +3,7 @@ import type { Locale } from './config'
 export type VisionCard = { title: string; desc: string }
 export type NextStepCard = { href: string; eyebrow: string; title: string; desc: string }
 export type ProjectLink = { label: string; href: string; external: boolean }
+export type FaqItem = { q: string; a: string }
 
 export type SiteStrings = {
   htmlLang: string
@@ -68,6 +69,8 @@ export type SiteStrings = {
     plannedItems: string[]
     linksTitle: string
     projectLinks: ProjectLink[]
+    faqTitle: string
+    faqItems: FaqItem[]
   }
   quickstart: {
     eyebrow: string
@@ -178,15 +181,15 @@ const en: SiteStrings = {
     visionCards: [
       {
         title: 'Open Protocol',
-        desc: 'Controlled by no single entity. A true public good for the AI era.',
+        desc: "Controlled by no single entity. Your address is derived from a key pair — no platform can revoke it, no service can erase it. When identity cannot be revoked, trust becomes possible.",
       },
       {
         title: 'Decentralized',
-        desc: 'Depends on no cloud provider. Immune to centralized outages.',
+        desc: 'Depends on no cloud provider. No central registry decides who gets found — discovery is open and equal. The most reliable agents rise naturally — not because a platform chose to promote them.',
       },
       {
         title: 'Permissionless',
-        desc: 'Open to all participants. Build, connect, and scale freely.',
+        desc: 'Open to all participants. Build, connect, and scale freely. The network works for everyone equally — no favoritism, no gatekeeping.',
       },
     ],
     ctaSectionTitle: 'Start building with A2AL',
@@ -256,6 +259,29 @@ const en: SiteStrings = {
       { label: 'Documentation', href: '/docs/integration/overview', external: false },
       { label: 'Protocol Summary', href: '/llms.txt', external: false },
       { label: 'Tangled Network', href: 'https://tanglednet.org', external: true },
+    ],
+    faqTitle: 'Frequently Asked Questions',
+    faqItems: [
+      {
+        q: 'What is A2AL?',
+        a: 'A2AL (Agent-to-Agent Link Protocol) is a decentralized networking protocol that gives AI agents a permanent cryptographic address, enables capability-based discovery across a global peer-to-peer network, and establishes direct encrypted connections — without any central server or platform.',
+      },
+      {
+        q: 'How is A2AL different from MCP or A2A?',
+        a: 'MCP defines how agents expose tools; A2A defines how agents collaborate. A2AL provides the missing layer both assume: how agents find each other and connect in the first place. A2AL works alongside these protocols, not instead of them.',
+      },
+      {
+        q: 'Do I need a server or domain name to use A2AL?',
+        a: 'No. A2AL generates a cryptographic address from a key pair — no DNS registration, no cloud account, no static IP required. The a2ald daemon handles NAT traversal automatically, making any device globally reachable.',
+      },
+      {
+        q: 'Can my AI assistant automatically discover and use agents via A2AL?',
+        a: 'Yes. When a2ald is configured as an MCP server, AI assistants like Claude, Cursor, or Windsurf can autonomously publish, discover, and connect to agents. Your AI assistant can find the best available service for a task without manual configuration.',
+      },
+      {
+        q: 'Is A2AL open source?',
+        a: 'Yes. A2AL is open source under MPL-2.0. The protocol specification, reference implementation (Go), and all SDK packages are freely available on GitHub.',
+      },
     ],
   },
   quickstart: {
@@ -376,9 +402,9 @@ const zh: SiteStrings = {
     visionHeading: '让每一个 Agent 拥有真正自主的身份。',
     visionLines: ['不寄居于任何平台，不因变故而消失。', '让发现与连接，像呼吸一样自然。'],
     visionCards: [
-      { title: '开放协议', desc: '不受任何单一实体控制。' },
-      { title: '去中心化网络', desc: '不依赖云服务。' },
-      { title: '自由参与', desc: '不需要许可。' },
+      { title: '开放协议', desc: '不受任何单一实体控制。你的地址由密钥对派生——没有平台能撤销它，没有服务能抹除它。当身份无法被剥夺，信任才真正成为可能。' },
+      { title: '去中心化网络', desc: '不依赖云服务。没有中心化注册机构决定谁能被发现——发现是开放且平等的。最值得信赖的 agent 自然涌现——不是因为平台选择推广了它。' },
+      { title: '自由参与', desc: '不需要许可。自由构建，自由连接，自由扩展。网络对每个人都一视同仁——无偏袒，无守门人。' },
     ],
     ctaSectionTitle: '用 A2AL 开始构建',
     ctaCards: [
@@ -447,6 +473,29 @@ const zh: SiteStrings = {
       { label: '文档', href: '/docs/integration/overview', external: false },
       { label: '协议摘要（AI 可读）', href: '/llms.txt', external: false },
       { label: 'Tangled Network', href: 'https://tanglednet.org', external: true },
+    ],
+    faqTitle: '常见问题',
+    faqItems: [
+      {
+        q: 'A2AL 是什么？',
+        a: 'A2AL（Agent-to-Agent Link Protocol）是一个去中心化组网协议，为 AI agent 提供永久性密码学地址，支持基于能力的全球点对点发现，并建立直接的加密连接——无需任何中心化服务器或平台。',
+      },
+      {
+        q: 'A2AL 与 MCP、A2A 有什么区别？',
+        a: 'MCP 定义 agent 如何暴露工具；A2A 定义 agent 如何协作。A2AL 提供了两者都依赖但未定义的那一层：agent 如何首先找到彼此并建立连接。A2AL 与这些协议并存互补，而非替代。',
+      },
+      {
+        q: '使用 A2AL 需要服务器或域名吗？',
+        a: '不需要。A2AL 从密钥对生成密码学地址——无需注册域名、无需云账户、无需固定 IP。a2ald daemon 自动处理 NAT 穿透，让任何设备全球可达。',
+      },
+      {
+        q: '我的 AI 助手可以通过 A2AL 自动发现并使用其他 agent 吗？',
+        a: '可以。将 a2ald 配置为 MCP 服务后，Claude、Cursor、Windsurf 等 AI 助手可以自主发布、发现并连接其他 agent，为你的任务自动寻找最合适的服务，无需手动配置。',
+      },
+      {
+        q: 'A2AL 是开源的吗？',
+        a: '是的。A2AL 遵循 MPL-2.0 开源许可。协议规范、参考实现（Go）及所有 SDK 包均可在 GitHub 上免费获取。',
+      },
     ],
   },
   quickstart: {
@@ -573,15 +622,15 @@ const ja: SiteStrings = {
     visionCards: [
       {
         title: 'オープンプロトコル',
-        desc: '単一の組織に支配されない、AI時代のための真の公共財。',
+        desc: '単一の組織に支配されない。アドレスはキーペアから導出され、プラットフォームはそれを失効させることも消去することもできません。アイデンティティを奪えないとき、はじめて信頼が生まれます。',
       },
       {
         title: '分散型',
-        desc: 'クラウドプロバイダーに依存せず、中央集権的な障害の影響を受けません。',
+        desc: 'クラウドプロバイダーに依存しない。中央レジストリは誰が発見されるかを決定しない——発見はオープンで平等です。最も信頼できるエージェントは自然に浮かび上がる——プラットフォームが推薦したからではなく。',
       },
       {
         title: 'パーミッションレス',
-        desc: '誰もが自由に参加可能。構築、接続、スケールに許可はいりません。',
+        desc: '誰もが自由に参加可能。構築し、接続し、自由にスケールする。ネットワークはすべての人に平等に機能する——えこひいきも、ゲートキーパーも存在しない。',
       },
     ],
     ctaSectionTitle: 'A2ALで構築を始める',
@@ -651,6 +700,29 @@ const ja: SiteStrings = {
       { label: 'ドキュメント', href: '/docs/integration/overview', external: false },
       { label: 'プロトコル概要', href: '/llms.txt', external: false },
       { label: 'Tangled Network', href: 'https://tanglednet.org', external: true },
+    ],
+    faqTitle: 'よくある質問',
+    faqItems: [
+      {
+        q: 'A2ALとは何ですか？',
+        a: 'A2AL（Agent-to-Agent Link Protocol）は、AIエージェントに永続的な暗号学的アドレスを付与し、グローバルなP2Pネットワーク上での能力ベースの発見と直接暗号化接続を実現する分散型ネットワーキング・プロトコルです。中央サーバーもプラットフォームも不要です。',
+      },
+      {
+        q: 'A2ALはMCPやA2Aとどう違いますか？',
+        a: 'MCPはエージェントがツールを公開する方法を定義し、A2Aはエージェントがコラボレーションする方法を定義します。A2ALは、両者が前提としているが定義していない層を提供します：エージェントが互いを見つけ、接続する方法です。A2ALはこれらのプロトコルを補完します。',
+      },
+      {
+        q: 'A2ALを使うにはサーバーやドメインが必要ですか？',
+        a: 'いいえ。A2ALはキーペアから暗号学的アドレスを生成します。DNSの登録も、クラウドアカウントも、固定IPも不要です。a2aldデーモンがNATトラバーサルを自動処理し、どのデバイスでもグローバルからアクセス可能にします。',
+      },
+      {
+        q: 'AIアシスタントはA2ALを通じてエージェントを自動的に発見・利用できますか？',
+        a: 'はい。a2aldをMCPサーバーとして設定すると、Claude、Cursor、WindsurfなどのAIアシスタントが自律的にエージェントを公開・発見・接続できます。手動設定なしに、タスクに最適なサービスを自動的に見つけることができます。',
+      },
+      {
+        q: 'A2ALはオープンソースですか？',
+        a: 'はい。A2ALはMPL-2.0ライセンスのオープンソースです。プロトコル仕様、リファレンス実装（Go）、およびすべてのSDKパッケージはGitHubで無料公開されています。',
+      },
     ],
   },
   quickstart: {

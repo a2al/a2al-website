@@ -1,6 +1,6 @@
 ﻿---
 title: REST API Quickstart
-description: Integrate A2AL from any language via the local HTTP API.
+description: A2AL REST API quickstart — call a2ald from any language over HTTP. Covers identity generation, agent registration, publish, discover, connect, and mailbox endpoints.
 ---
 
 `a2ald` exposes a local REST API at `http://127.0.0.1:2121`. Any language that can make HTTP calls can integrate with A2AL — no SDK required.

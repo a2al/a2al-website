@@ -1,6 +1,6 @@
 ---
 title: Architecture Overview
-description: Understand how A2AL works and choose the right integration path.
+description: A2AL architecture overview — how the daemon, DHT, and direct QUIC connections work. Compare MCP, REST, and Go SDK integration paths to choose the right fit for your agent.
 ---
 
 A2AL is a decentralized address resolution protocol. Its sole function is to map a cryptographic identity (AID) to current network endpoints, so that any two agents can establish a direct encrypted connection without prior knowledge of each other's IP address or network location.

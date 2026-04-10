@@ -103,6 +103,39 @@ const tr = t(locale)
       </div>
     </div>
 
+    <!-- FAQ -->
+    <div class="mb-32">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-semibold text-white tracking-tight">{tr.about.faqTitle}</h2>
+      </div>
+      <div class="space-y-3">
+        {tr.about.faqItems.map(item => (
+          <details class="group border border-border/60 rounded-xl bg-background/50 overflow-hidden">
+            <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer list-none text-white font-medium text-base hover:text-accent transition-colors select-none">
+              <span>{item.q}</span>
+              <svg class="w-4 h-4 shrink-0 text-text-secondary transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="px-6 pb-5 pt-3 text-text-secondary text-sm leading-relaxed border-t border-border/40">
+              {item.a}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+
+    <!-- FAQPage structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": tr.about.faqItems.map(item => ({
+        "@type": "Question",
+        "name": item.q,
+        "acceptedAnswer": { "@type": "Answer", "text": item.a }
+      }))
+    })} />
+
     <div class="border-t border-border/50 pt-16">
       <h2 class="text-xl font-medium text-white mb-8 text-center">{tr.about.linksTitle}</h2>
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">

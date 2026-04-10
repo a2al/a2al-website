@@ -115,6 +115,21 @@ const visionLines = tr.home.visionLines.filter(Boolean)
   </div>
 </section>
 
+<!-- Structured data -->
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "A2AL",
+  "description": tr.meta.homeDescription,
+  "url": "https://a2al.org",
+  "downloadUrl": "https://github.com/a2al/a2al/releases",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Linux, macOS, Windows",
+  "inLanguage": tr.htmlLang,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "keywords": "AI agent, agent discovery, decentralized networking, MCP, sovereign identity, peer-to-peer, agent protocol"
+})} />
+
 <!-- CTA Cards -->
 <section class="py-32 px-6">
   <div class="max-w-6xl mx-auto">
