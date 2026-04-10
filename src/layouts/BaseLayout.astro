@@ -20,7 +20,7 @@ const p = (path: string) => localizePath(locale, path)
 
 const siteUrl = (Astro.site?.toString() ?? 'https://a2al.org').replace(/\/$/, '')
 const canonicalUrl = siteUrl + localizePath(locale, pathKey)
-const ogImage = `${siteUrl}/favicon.svg`
+const ogImage = `${siteUrl}/og-default.png`
 const fullTitle = `${title} — A2AL`
 ---
 
