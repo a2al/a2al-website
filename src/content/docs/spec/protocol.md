@@ -3,7 +3,7 @@ title: Protocol Specification
 description: AID format, DHT operations, data structures, and connection establishment for third-party implementers.
 ---
 
-This document is intended for third-party protocol implementers and developers who need to understand A2AL's wire format, data structures, and network behavior. Application developers should start with the [Architecture Overview](/docs/integration/overview) or the [Go Packages reference](/docs/reference/go-packages).
+This document is intended for third-party protocol implementers and developers who need to understand A2AL's wire format, data structures, and network behavior. Application developers should start with the [Getting Started guide](/docs/user/getting-started) or, for a deeper look at the stack, the [Architecture Overview](/docs/integration/overview) or the [Go Packages reference](/docs/reference/go-packages).
 
 ---
 

@@ -256,9 +256,9 @@ const en: SiteStrings = {
     linksTitle: 'Project Links',
     projectLinks: [
       { label: 'GitHub', href: 'https://github.com/a2al/a2al', external: true },
-      { label: 'Documentation', href: '/docs/integration/overview', external: false },
+      { label: 'Documentation', href: '/docs/user/getting-started', external: false },
       { label: 'Protocol Summary', href: '/llms.txt', external: false },
-      { label: 'Tangled Network', href: 'https://tanglednet.org', external: true },
+      { label: 'Tangled Network', href: 'http://tngld.net', external: true },
     ],
     faqTitle: 'Frequently Asked Questions',
     faqItems: [
@@ -328,13 +328,13 @@ const en: SiteStrings = {
     nextTitle: "Explore Further",
     nextSteps: [
       {
-        href: '/docs/integration/overview',
+        href: '/docs/user/getting-started',
         eyebrow: 'For Developers',
         title: 'Integrate into your app',
         desc: 'REST API, Go SDK, or MCP.',
       },
       {
-        href: '/docs/user/getting-started',
+        href: '/docs/user/publish-services',
         eyebrow: 'User Guide',
         title: 'Explore all features',
         desc: 'Publish services, build a Swarm.',
@@ -470,9 +470,9 @@ const zh: SiteStrings = {
     linksTitle: '项目链接',
     projectLinks: [
       { label: 'GitHub', href: 'https://github.com/a2al/a2al', external: true },
-      { label: '文档', href: '/docs/integration/overview', external: false },
+      { label: '文档', href: '/docs/user/getting-started', external: false },
       { label: '协议摘要（AI 可读）', href: '/llms.txt', external: false },
-      { label: 'Tangled Network', href: 'https://tanglednet.org', external: true },
+      { label: 'Tangled Network', href: 'http://tngld.net', external: true },
     ],
     faqTitle: '常见问题',
     faqItems: [
@@ -542,7 +542,7 @@ const zh: SiteStrings = {
     nextTitle: '继续探索',
     nextSteps: [
       {
-        href: '/docs/integration/overview',
+        href: '/docs/user/getting-started',
         eyebrow: '开发者集成',
         title: '接入你的应用',
         desc: '通过 REST API、Go SDK 或 MCP 将 A2AL 集成进你的 agent 程序。',
@@ -697,9 +697,9 @@ const ja: SiteStrings = {
     linksTitle: 'プロジェクトリンク',
     projectLinks: [
       { label: 'GitHub', href: 'https://github.com/a2al/a2al', external: true },
-      { label: 'ドキュメント', href: '/docs/integration/overview', external: false },
+      { label: 'ドキュメント', href: '/docs/user/getting-started', external: false },
       { label: 'プロトコル概要', href: '/llms.txt', external: false },
-      { label: 'Tangled Network', href: 'https://tanglednet.org', external: true },
+      { label: 'Tangled Network', href: 'http://tngld.net', external: true },
     ],
     faqTitle: 'よくある質問',
     faqItems: [
@@ -769,13 +769,13 @@ const ja: SiteStrings = {
     nextTitle: 'さらに探索する',
     nextSteps: [
       {
-        href: '/docs/integration/overview',
+        href: '/docs/user/getting-started',
         eyebrow: '開発者向け',
         title: 'アプリケーションへの統合',
         desc: 'REST API、Go SDK、または MCP。',
       },
       {
-        href: '/docs/user/getting-started',
+        href: '/docs/user/publish-services',
         eyebrow: 'ユーザーガイド',
         title: 'すべての機能を探索',
         desc: 'サービスの公開、Swarm（群れ）の構築。',

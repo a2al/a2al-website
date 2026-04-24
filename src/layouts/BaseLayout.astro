@@ -71,7 +71,7 @@ const fullTitle = `${title} — A2AL`
         </a>
         <div class="hidden md:flex items-center gap-6">
           <a href={p('/quickstart')} class="text-text-secondary hover:text-white text-sm transition-colors">{tr.nav.quickstart}</a>
-          <a href="/docs/integration/overview" class="text-text-secondary hover:text-white text-sm transition-colors">{tr.nav.docs}</a>
+          <a href="/docs/user/getting-started" class="text-text-secondary hover:text-white text-sm transition-colors">{tr.nav.docs}</a>
           <a href={p('/about')} class="text-text-secondary hover:text-white text-sm transition-colors">{tr.nav.about}</a>
           <LanguageSwitcher locale={locale} pathKey={pathKey} />
           <a
@@ -100,14 +100,14 @@ const fullTitle = `${title} — A2AL`
           <div class="text-text-secondary text-sm">{tr.footer.tagline}</div>
           <div class="text-text-secondary text-sm mt-1">
             {tr.footer.tangled}{' '}
-            <a href="https://tanglednet.org" class="hover:text-accent transition-colors">Tangled Network</a>.
+            <a href="http://tngld.net" class="hover:text-accent transition-colors">Tangled Network</a>.
           </div>
         </div>
         <div class="flex gap-12 text-sm">
           <div class="flex flex-col gap-3">
             <div class="text-white font-medium">{tr.footer.resources}</div>
             <a href={p('/quickstart')} class="text-text-secondary hover:text-white transition-colors">{tr.footer.quickstart}</a>
-            <a href="/docs/integration/overview" class="text-text-secondary hover:text-white transition-colors">{tr.footer.docs}</a>
+            <a href="/docs/user/getting-started" class="text-text-secondary hover:text-white transition-colors">{tr.footer.docs}</a>
             <a href="/llms.txt" class="text-text-secondary hover:text-white transition-colors">{tr.footer.llms}</a>
           </div>
           <div class="flex flex-col gap-3">
