@@ -1,5 +1,6 @@
 ---
 import type { Locale } from '@/i18n/config'
+import { localizePath } from '@/i18n/paths'
 import { t } from '@/i18n/strings'
 
 interface Props {
@@ -8,6 +9,7 @@ interface Props {
 
 const { locale } = Astro.props
 const tr = t(locale)
+const p = (path: string) => localizePath(locale, path)
 
 const tabActive =
   'flex-1 px-5 py-3.5 text-sm font-medium transition-all text-accent border-b-2 border-accent bg-surface/50'
@@ -130,6 +132,24 @@ const tabIdle =
           <svg class="w-5 h-5 text-text-secondary/50 group-hover/link:text-accent transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
           </svg>
+        </a>
+
+        <a
+          href={p('/screenshots')}
+          class="group/preview mt-6 block rounded-xl border border-border/60 bg-background/40 overflow-hidden hover:border-accent/40 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+        >
+          <div class="relative aspect-[16/10] max-h-[min(26rem,52vw)] md:max-h-[22rem] bg-surface/30">
+            <img
+              src="/screenshots/screenshot-agent.png"
+              alt={tr.quickstart.step2PreviewAlt}
+              class="absolute inset-0 w-full h-full object-contain object-top p-3 md:p-4"
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+          <p class="px-4 py-3 text-sm text-text-secondary/90 border-t border-border/40 group-hover/preview:text-accent/90 transition-colors">
+            {tr.quickstart.step2PreviewHint}
+          </p>
         </a>
       </div>
 

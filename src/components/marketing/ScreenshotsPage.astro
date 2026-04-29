@@ -1,0 +1,54 @@
+---
+import type { Locale } from '@/i18n/config'
+import { t } from '@/i18n/strings'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const tr = t(locale)
+
+const shots = [
+  { src: '/screenshots/screenshot-agent.png', title: tr.screenshots.agentTitle, alt: tr.screenshots.agentAlt },
+  { src: '/screenshots/screenshot-discover.png', title: tr.screenshots.discoverTitle, alt: tr.screenshots.discoverAlt },
+  { src: '/screenshots/screenshot-node.png', title: tr.screenshots.nodeTitle, alt: tr.screenshots.nodeAlt },
+]
+---
+
+<div class="relative pt-32 pb-32 px-6 overflow-hidden">
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-accent/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+  <div class="max-w-4xl mx-auto relative z-10">
+    <div class="text-center mb-20">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-accent text-xs font-semibold tracking-widest uppercase mb-8">
+        {tr.screenshots.eyebrow}
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold text-white leading-tight tracking-tight mb-6">
+        {tr.screenshots.title}
+      </h1>
+      <p class="text-lg md:text-xl text-text-secondary leading-relaxed max-w-2xl mx-auto font-light">
+        {tr.screenshots.subtitle}
+      </p>
+    </div>
+
+    <div class="space-y-16">
+      {
+        shots.map((item) => (
+          <figure class="rounded-2xl bg-surface/40 border border-border/50 backdrop-blur-sm overflow-hidden p-6 md:p-8">
+            <figcaption class="text-lg font-semibold text-white tracking-tight mb-4">{item.title}</figcaption>
+            <div class="rounded-xl border border-border/60 bg-background/50 overflow-hidden">
+              <img
+                src={item.src}
+                alt={item.alt}
+                class="w-full h-auto object-contain max-h-[min(85vh,900px)] mx-auto block"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          </figure>
+        ))
+      }
+    </div>
+  </div>
+</div>

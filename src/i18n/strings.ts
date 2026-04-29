@@ -15,6 +15,8 @@ export type SiteStrings = {
     aboutDescription: string
     quickstartTitle: string
     quickstartDescription: string
+    screenshotsTitle: string
+    screenshotsDescription: string
   }
   nav: { quickstart: string; docs: string; about: string; github: string }
   footer: {
@@ -25,6 +27,7 @@ export type SiteStrings = {
     quickstart: string
     docs: string
     llms: string
+    screenshots: string
     about: string
     github: string
     external: string
@@ -114,6 +117,19 @@ export type SiteStrings = {
     mcpLink: string
     nextTitle: string
     nextSteps: NextStepCard[]
+    step2PreviewAlt: string
+    step2PreviewHint: string
+  }
+  screenshots: {
+    eyebrow: string
+    title: string
+    subtitle: string
+    agentTitle: string
+    discoverTitle: string
+    nodeTitle: string
+    agentAlt: string
+    discoverAlt: string
+    nodeAlt: string
   }
 }
 
@@ -128,6 +144,8 @@ const en: SiteStrings = {
     aboutDescription: 'Why A2AL exists — decentralized networking infrastructure for AI agents.',
     quickstartTitle: 'Quick Start',
     quickstartDescription: 'Get your AI agent online in 5 minutes with A2AL.',
+    screenshotsTitle: 'a2ald — Web UI',
+    screenshotsDescription: 'Screenshots of the a2ald built-in control panel — Agent, Discover, and Node.',
   },
   nav: {
     quickstart: 'Quick Start',
@@ -143,6 +161,7 @@ const en: SiteStrings = {
     quickstart: 'Quick Start',
     docs: 'Docs',
     llms: 'llms.txt',
+    screenshots: 'Web UI',
     about: 'About',
     github: 'GitHub ↗',
     external: 'External ↗',
@@ -340,6 +359,19 @@ const en: SiteStrings = {
         desc: 'Publish services, build a Swarm.',
       },
     ],
+    step2PreviewAlt: 'a2ald Web UI — Agent view (preview)',
+    step2PreviewHint: 'Click to open full-size Agent, Discover, and Node views.',
+  },
+  screenshots: {
+    eyebrow: 'Reference',
+    title: 'a2ald — Web UI',
+    subtitle: 'Built-in browser control panel after you start a2ald.',
+    agentTitle: 'Agent',
+    discoverTitle: 'Discover',
+    nodeTitle: 'Node',
+    agentAlt: 'Screenshot: a2ald Agent screen',
+    discoverAlt: 'Screenshot: a2ald Discover screen',
+    nodeAlt: 'Screenshot: a2ald Node screen',
   },
 }
 
@@ -354,6 +386,8 @@ const zh: SiteStrings = {
     aboutDescription: 'A2AL 为何存在 —— AI 智能体的去中心化网络基础设施。',
     quickstartTitle: '快速开始',
     quickstartDescription: '约 5 分钟，让你的 agent 接入 A2AL 网络。',
+    screenshotsTitle: 'a2ald 控制面板 / Web 界面',
+    screenshotsDescription: 'a2ald 内置控制面板界面截图：Agent、Discover、Node。',
   },
   nav: {
     quickstart: '快速开始',
@@ -369,6 +403,7 @@ const zh: SiteStrings = {
     quickstart: '快速开始',
     docs: '文档',
     llms: 'llms.txt',
+    screenshots: 'Web 界面',
     about: '关于',
     github: 'GitHub ↗',
     external: '外部 ↗',
@@ -554,6 +589,19 @@ const zh: SiteStrings = {
         desc: '为 Claude、Cursor、Windsurf 等配置 MCP，让 AI 直接操作 A2AL 网络。',
       },
     ],
+    step2PreviewAlt: 'a2ald Web 界面 — Agent 视图（预览）',
+    step2PreviewHint: '点击查看 Agent、Discover、Node 完整界面示例。',
+  },
+  screenshots: {
+    eyebrow: '参考',
+    title: 'a2ald 控制面板 / Web 界面',
+    subtitle: '启动 a2ald 后，在浏览器中使用的内置管理界面。',
+    agentTitle: 'Agent',
+    discoverTitle: 'Discover',
+    nodeTitle: 'Node',
+    agentAlt: '截图：a2ald Agent 界面',
+    discoverAlt: '截图：a2ald Discover 界面',
+    nodeAlt: '截图：a2ald Node 界面',
   },
 }
 
@@ -569,6 +617,9 @@ const ja: SiteStrings = {
       'A2ALが存在する理由 — AIエージェントのための分散型ネットワーク・インフラストラクチャ。',
     quickstartTitle: 'クイックスタート',
     quickstartDescription: '約5分でAIエージェントをA2ALネットワークに接続。',
+    screenshotsTitle: 'a2ald — Web UI',
+    screenshotsDescription:
+      'a2ald内蔵のコントロールパネル（ブラウザ）の画面例 — Agent、Discover、Node。',
   },
   nav: {
     quickstart: 'クイックスタート',
@@ -584,6 +635,7 @@ const ja: SiteStrings = {
     quickstart: 'クイックスタート',
     docs: 'ドキュメント',
     llms: 'llms.txt',
+    screenshots: 'Web UI',
     about: '概要',
     github: 'GitHub ↗',
     external: '外部 ↗',
@@ -781,6 +833,19 @@ const ja: SiteStrings = {
         desc: 'サービスの公開、Swarm（群れ）の構築。',
       },
     ],
+    step2PreviewAlt: 'a2ald Web UI — Agent 画面（プレビュー）',
+    step2PreviewHint: 'クリックで Agent・Discover・Node の全画面を表示します。',
+  },
+  screenshots: {
+    eyebrow: 'リファレンス',
+    title: 'a2ald — Web UI',
+    subtitle: 'a2ald 起動後にブラウザで開く、内蔵のコントロールパネルです。',
+    agentTitle: 'Agent',
+    discoverTitle: 'Discover',
+    nodeTitle: 'Node',
+    agentAlt: 'スクリーンショット：a2ald Agent 画面',
+    discoverAlt: 'スクリーンショット：a2ald Discover 画面',
+    nodeAlt: 'スクリーンショット：a2ald Node 画面',
   },
 }
 

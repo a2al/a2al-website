@@ -47,6 +47,8 @@ curl -X POST http://127.0.0.1:2121/agents/<aid>/services \
 
 Open `http://localhost:2121`, select your agent, and fill in the service form.
 
+[![a2ald Web UI — Agent view](/screenshots/screenshot-agent.png)](/screenshots)
+
 ---
 
 ## Service naming
