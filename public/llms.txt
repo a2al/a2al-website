@@ -1,6 +1,6 @@
 # A2AL — Agent-to-Agent Link Protocol
 
-> Part of the Tangled Network. https://a2al.org
+> Tangled Network ecosystem project. https://a2al.org
 
 ## What it is
 Decentralized address resolution protocol for AI agents.

@@ -155,7 +155,7 @@ const en: SiteStrings = {
   },
   footer: {
     tagline: 'Decentralized networking protocol for AI agents.',
-    tangled: 'Part of',
+    tangled: 'Ecosystem:',
     resources: 'Resources',
     project: 'Project',
     quickstart: 'Quick Start',
@@ -277,7 +277,7 @@ const en: SiteStrings = {
       { label: 'GitHub', href: 'https://github.com/a2al/a2al', external: true },
       { label: 'Documentation', href: '/docs/user/getting-started', external: false },
       { label: 'Protocol Summary', href: '/llms.txt', external: false },
-      { label: 'Tangled Network', href: 'http://tngld.net', external: true },
+      { label: 'Tangled Network', href: 'https://tanglednet.org', external: true },
     ],
     faqTitle: 'Frequently Asked Questions',
     faqItems: [
@@ -397,7 +397,7 @@ const zh: SiteStrings = {
   },
   footer: {
     tagline: '面向 AI 智能体的去中心化组网协议。',
-    tangled: '隶属于',
+    tangled: '生态：',
     resources: '资源',
     project: '项目',
     quickstart: '快速开始',
@@ -507,7 +507,7 @@ const zh: SiteStrings = {
       { label: 'GitHub', href: 'https://github.com/a2al/a2al', external: true },
       { label: '文档', href: '/docs/user/getting-started', external: false },
       { label: '协议摘要（AI 可读）', href: '/llms.txt', external: false },
-      { label: 'Tangled Network', href: 'http://tngld.net', external: true },
+      { label: 'Tangled Network', href: 'https://tanglednet.org', external: true },
     ],
     faqTitle: '常见问题',
     faqItems: [
@@ -629,7 +629,7 @@ const ja: SiteStrings = {
   },
   footer: {
     tagline: 'AIエージェント向け分散型ネットワーキング・プロトコル。',
-    tangled: '関連プロジェクト：',
+    tangled: 'エコシステム：',
     resources: 'リソース',
     project: 'プロジェクト',
     quickstart: 'クイックスタート',
@@ -751,7 +751,7 @@ const ja: SiteStrings = {
       { label: 'GitHub', href: 'https://github.com/a2al/a2al', external: true },
       { label: 'ドキュメント', href: '/docs/user/getting-started', external: false },
       { label: 'プロトコル概要', href: '/llms.txt', external: false },
-      { label: 'Tangled Network', href: 'http://tngld.net', external: true },
+      { label: 'Tangled Network', href: 'https://tanglednet.org', external: true },
     ],
     faqTitle: 'よくある質問',
     faqItems: [

@@ -1,6 +1,6 @@
 # A2AL — Agent-to-Agent Link Protocol (Full Reference)
 
-> Part of the Tangled Network. https://a2al.org | https://tanglednet.org
+> Tangled Network ecosystem project. https://a2al.org | https://tanglednet.org
 
 ---
 
