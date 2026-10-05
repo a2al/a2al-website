@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '@/i18n/config'
-import { localizePath } from '@/i18n/paths'
+import { docsPath, localizePath } from '@/i18n/paths'
 import { t } from '@/i18n/strings'
 
 interface Props {
@@ -10,107 +10,318 @@ interface Props {
 const { locale } = Astro.props
 const tr = t(locale)
 const p = (path: string) => localizePath(locale, path)
-const visionLines = tr.home.visionLines.filter(Boolean)
+const d = (path: string) => docsPath(locale, path)
 ---
 
-<!-- Hero -->
-<section class="relative min-h-[85vh] flex items-center justify-center overflow-hidden pt-20">
-  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-accent/10 rounded-full blur-[120px] pointer-events-none"></div>
-
-  <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
-    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-text-secondary text-sm font-medium mb-8">
-      <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
-      {tr.home.heroEyebrow}
-    </div>
-
-    <h1 class="text-5xl md:text-7xl font-bold text-white leading-tight tracking-tight mb-8">
-      {tr.home.heroTitleLine1}<br />
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-white to-text-secondary">{tr.home.heroTitleLine2}</span>
-    </h1>
-    <p class="text-lg md:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed mb-12">
-      {tr.home.heroSubtitleLine1}
-      <br class="hidden md:block" />
-      {tr.home.heroSubtitleLine2}
-    </p>
-    <div class="flex flex-col sm:flex-row gap-5 justify-center items-center">
-      <a href={p('/quickstart')} class="btn-primary text-base px-8 py-3.5 shadow-[0_0_40px_rgba(0,212,170,0.3)] hover:shadow-[0_0_60px_rgba(0,212,170,0.4)] transition-shadow">
-        {tr.home.ctaPrimary}
-      </a>
-      <a href="/docs/user/getting-started" class="btn-secondary text-base px-8 py-3.5 bg-surface border border-border hover:border-text-secondary rounded-md">
-        {tr.home.ctaSecondary}
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- How It Works -->
-<section class="py-24 px-6 border-t border-border/50 relative">
-  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-accent/30 to-transparent"></div>
+<!-- 1. Hero 场景主画卷 -->
+<section class="relative pt-24 pb-28 px-6 overflow-hidden">
+  <!-- 背景径向渐变景深 -->
+  <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[550px] bg-accent/10 rounded-full blur-[140px] pointer-events-none -z-10"></div>
+  
   <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-20">
-      <h2 class="text-3xl md:text-4xl font-semibold text-white tracking-tight mb-4">{tr.home.howTitle}</h2>
-      <p class="text-text-secondary text-lg">{tr.home.howLead}</p>
-    </div>
-    <div class="grid md:grid-cols-3 gap-8">
-      {
-        tr.home.cards.map((card, idx) => (
-          <div class="group card p-10 hover:bg-[#151f1c] transition-colors duration-300">
-            <div class="w-12 h-12 rounded-xl bg-surface border border-border flex items-center justify-center mb-6 group-hover:border-accent/50 group-hover:text-accent transition-colors">
-              {idx === 0 && (
-                <svg class="w-5 h-5 text-text-secondary group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-                </svg>
-              )}
-              {idx === 1 && (
-                <svg class="w-5 h-5 text-text-secondary group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                </svg>
-              )}
-              {idx === 2 && (
-                <svg class="w-5 h-5 text-text-secondary group-hover:text-accent transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
-                </svg>
-              )}
-            </div>
-            <h3 class="text-white font-medium text-xl mb-3">{card.title}</h3>
-            <p class="text-text-secondary leading-relaxed text-sm">{card.body}</p>
-          </div>
-        ))
-      }
-    </div>
-  </div>
-</section>
-
-<!-- Vision -->
-<section class="py-32 px-6 bg-surface/30 border-y border-border">
-  <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-16 items-center">
-    <div class="flex-1">
-      <h2 class="text-3xl md:text-5xl font-medium text-white leading-tight tracking-tight mb-8">
-        {tr.home.visionHeading}
-      </h2>
-      <div class="space-y-4 text-xl md:text-2xl text-text-secondary font-light leading-relaxed">
-        {
-          visionLines.map((line, i) => (
-            <p class:list={{ 'text-white font-medium': i === visionLines.length - 1 }}>{line}</p>
-          ))
-        }
+    <!-- Eyebrow -->
+    <div class="flex justify-center mb-8">
+      <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-accent/30 bg-accent/5 text-accent text-xs font-mono font-medium tracking-wide">
+        <span class="w-2 h-2 rounded-full bg-accent animate-ping"></span>
+        {tr.home.heroEyebrow}
       </div>
     </div>
 
-    <div class="flex-1 w-full flex flex-col gap-6">
-      {
-        tr.home.visionCards.map((item) => (
-          <div class="flex gap-4 p-6 rounded-xl border border-border bg-background/50 backdrop-blur-sm">
-            <div class="mt-1 w-5 h-5 shrink-0 rounded-full bg-accent/20 flex items-center justify-center">
-              <div class="w-2 h-2 rounded-full bg-accent"></div>
-            </div>
-            <div>
-              <h4 class="text-white font-medium mb-1">{item.title}</h4>
-              <p class="text-text-secondary text-sm leading-relaxed">{item.desc}</p>
-            </div>
+    <!-- 主张 Headline -->
+    <div class="text-center max-w-4xl mx-auto mb-14">
+      <h1 class="hero-title text-4xl sm:text-5xl md:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.15]">
+        {tr.home.heroTitleLine1}<br />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent via-white to-text-secondary">
+          {tr.home.heroTitleLine2}
+        </span>
+      </h1>
+      <p class="text-base sm:text-lg md:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
+        {tr.home.heroSubtitle}
+      </p>
+
+      <!-- 双行动 CTA -->
+      <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a
+          href={p('/quickstart')}
+          class="w-full sm:w-auto px-8 py-4 bg-accent text-background font-semibold rounded-lg hover:bg-opacity-90 transition-all duration-200 shadow-[0_0_25px_rgba(0,212,170,0.35)] hover:shadow-[0_0_35px_rgba(0,212,170,0.5)] text-center text-base"
+        >
+          {tr.home.ctaPrimary}
+        </a>
+        <button
+          type="button"
+          id="copy-hero-prompt"
+          data-prompt={tr.home.aiPromptText}
+          data-copied={tr.home.ctaPromptCopied}
+          class="w-full sm:w-auto px-7 py-4 border border-border hover:border-accent/60 bg-surface/80 rounded-lg text-base text-text-secondary hover:text-white transition-all flex items-center justify-center gap-2.5 cursor-pointer"
+        >
+          <svg class="w-5 h-5 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+          </svg>
+          <span class="btn-text">{tr.home.ctaPromptBtn}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 生产级拟物终端实证 -->
+    <div class="max-w-3xl mx-auto rounded-xl overflow-hidden font-mono text-xs sm:text-sm border border-border/80 bg-[#080d0c] shadow-[0_20px_50px_rgba(0,0,0,0.6),0_0_40px_rgba(0,212,170,0.08)] transition-all duration-300 hover:border-accent/40 hover:shadow-[0_25px_60px_rgba(0,0,0,0.7),0_0_50px_rgba(0,212,170,0.12)]">
+      <div class="bg-[#111916] px-4 py-3 border-b border-border flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-[#ff5f56]"></span>
+          <span class="w-3 h-3 rounded-full bg-[#ffbd2e]"></span>
+          <span class="w-3 h-3 rounded-full bg-[#27c93f]"></span>
+          <span class="ml-2 text-text-secondary/60 text-xs">{tr.home.terminalTitle}</span>
+        </div>
+        <span class="text-text-secondary/60 text-xs flex items-center gap-1.5 font-sans">
+          <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span> Connected
+        </span>
+      </div>
+
+      <div class="p-5 sm:p-6 space-y-4 text-text-secondary leading-relaxed overflow-x-auto">
+        <div class="text-text-secondary/50 font-sans text-xs">{tr.home.terminalStep1Comment}</div>
+        <div class="flex items-center gap-2 text-white">
+          <span class="text-accent font-bold select-none">$</span>
+          <span>{tr.home.terminalStep1Cmd}</span>
+        </div>
+        <div class="text-text-secondary pl-4 space-y-1">
+          <!-- 示例 AID 必须与 terminalStep2Cmd 里的一致，且是合法的 42 位（大小写是校验位） -->
+          <div>{tr.home.terminalStep1Out1} <span class="text-accent font-semibold inline-block px-1.5 py-0.5 rounded bg-accent/10 border border-accent/20">A06aE78750B7f0a5975a9f455C98087902a4Ab15ca</span></div>
+          <div class="text-text-secondary/80">{tr.home.terminalStep1Out2}</div>
+        </div>
+
+        <div class="text-text-secondary/50 pt-2 font-sans text-xs">{tr.home.terminalStep2Comment}</div>
+        <div class="flex items-center gap-2 text-white">
+          <span class="text-accent font-bold select-none">$</span>
+          <span class="break-all">{tr.home.terminalStep2Cmd}</span>
+        </div>
+
+        <div class="text-text-secondary/50 pt-2 font-sans text-xs">{tr.home.terminalStep3Comment}</div>
+        <div class="bg-surface/90 border border-accent/25 rounded-lg p-3.5 text-white pl-4 space-y-1.5 shadow-inner font-mono">
+          <div class="text-accent font-semibold flex items-center justify-between text-xs">
+            <span>{tr.home.terminalStep3RemoteName}</span>
+            <span class="text-text-secondary/60 text-[11px] font-normal">[{tr.home.terminalStep3RemoteVia}]</span>
           </div>
-        ))
-      }
+          <div class="text-xs sm:text-sm text-white/90 break-all">{tr.home.terminalStep3RemoteMsg}</div>
+        </div>
+      </div>
+
+      <!-- 底部能力微型带 -->
+      <div class="bg-[#0e1614] px-4 py-3 border-t border-border/80 flex flex-wrap items-center justify-between text-xs text-text-secondary/70 gap-2">
+        <span class="text-text-secondary font-semibold font-sans">{tr.home.capabilitiesLabel}</span>
+        
+        <!-- Fetch: Request-Response Stream -->
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface/80 border border-border/70 hover:border-accent/40 transition-colors">
+          <svg class="w-3.5 h-3.5 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+          </svg>
+          <span class="font-medium text-white/90">{tr.home.capFetch}</span>
+        </span>
+
+        <!-- Tunnel: Persistent Bi-directional Channel -->
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface/80 border border-border/70 hover:border-accent/40 transition-colors">
+          <svg class="w-3.5 h-3.5 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 2v20m0-20L7 7m5-5l5 5m-10 10l5 5 5-5"></path>
+          </svg>
+          <span class="font-medium text-white/90">{tr.home.capTunnel}</span>
+        </span>
+
+        <!-- Note: Asynchronous Immutable Message -->
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface/80 border border-border/70 hover:border-accent/40 transition-colors">
+          <svg class="w-3.5 h-3.5 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          <span class="font-medium text-white/90">{tr.home.capNote}</span>
+        </span>
+
+        <!-- Room: Encrypted Multiparty Topology -->
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface/80 border border-border/70 hover:border-accent/40 transition-colors">
+          <svg class="w-3.5 h-3.5 text-accent shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+          </svg>
+          <span class="font-medium text-white/90">{tr.home.capRoom}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 范式对比（Paradigm Shift） -->
+<section id="contrast" class="py-24 px-6 border-t border-border/50 relative">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <span class="text-accent text-xs font-bold tracking-widest uppercase mb-2 block">{tr.home.contrastEyebrow}</span>
+      <h2 class="display-heading text-3xl md:text-4xl font-bold text-white mb-4 text-balance">{tr.home.contrastTitle}</h2>
+      <p class="text-text-secondary text-sm md:text-base leading-relaxed">{tr.home.contrastLead}</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-8 items-stretch">
+      <!-- 对比卡片 1：传统痛点（暗哑收敛） vs A2AL（发光聚焦） -->
+      <div class="bg-surface/60 border border-border/70 rounded-xl p-8 hover:border-accent/40 transition-all duration-300 flex flex-col justify-between shadow-lg relative overflow-hidden group">
+        <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-500/30 via-transparent to-accent/40"></div>
+        <div>
+          <div class="mb-6">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20">{tr.home.contrastCard1Badge}</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-4">{tr.home.contrastCard1Title}</h3>
+          <ul class="text-sm text-text-secondary space-y-3 mb-8">
+            {tr.home.contrastCard1Pains.map((pain) => (
+              <li class="flex items-start gap-2.5">
+                <span class="text-red-400/80 font-bold shrink-0">×</span>
+                <span class="leading-relaxed text-text-secondary/80">{pain}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="pt-6 border-t border-border/80 bg-surface/40 -mx-8 -mb-8 p-8 rounded-b-xl">
+          <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 mb-2">
+            <div class="flex items-center gap-2 text-accent text-lg font-bold uppercase">
+              <span class="w-2 h-2 rounded-full bg-accent shadow-[0_0_8px_#00d4aa] shrink-0"></span> {tr.home.contrastCard1GainTitle}
+            </div>
+            <span class="ml-auto text-xs text-text-secondary/60 font-mono tracking-wider">{tr.home.contrastCard1Tag}</span>
+          </div>
+          <p class="text-sm text-white font-medium leading-relaxed">{tr.home.contrastCard1GainBody}</p>
+        </div>
+      </div>
+
+      <!-- 对比卡片 2：传统痛点 vs A2AL -->
+      <div class="bg-surface/60 border border-border/70 rounded-xl p-8 hover:border-accent/40 transition-all duration-300 flex flex-col justify-between shadow-lg relative overflow-hidden group">
+        <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-500/30 via-transparent to-accent/40"></div>
+        <div>
+          <div class="mb-6">
+            <span class="text-xs font-semibold px-2.5 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20">{tr.home.contrastCard2Badge}</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-4">{tr.home.contrastCard2Title}</h3>
+          <ul class="text-sm text-text-secondary space-y-3 mb-8">
+            {tr.home.contrastCard2Pains.map((pain) => (
+              <li class="flex items-start gap-2.5">
+                <span class="text-red-400/80 font-bold shrink-0">×</span>
+                <span class="leading-relaxed text-text-secondary/80">{pain}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="pt-6 border-t border-border/80 bg-surface/40 -mx-8 -mb-8 p-8 rounded-b-xl">
+          <div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 mb-2">
+            <div class="flex items-center gap-2 text-accent text-lg font-bold uppercase">
+              <span class="w-2 h-2 rounded-full bg-accent shadow-[0_0_8px_#00d4aa] shrink-0"></span> {tr.home.contrastCard2GainTitle}
+            </div>
+            <span class="ml-auto text-xs text-text-secondary/60 font-mono tracking-wider">{tr.home.contrastCard2Tag}</span>
+          </div>
+          <p class="text-sm text-white font-medium leading-relaxed">{tr.home.contrastCard2GainBody}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 技术架构（Protocol Stack） -->
+<section id="ecology" class="py-24 px-6 border-t border-border/50 bg-[#0c1311] relative">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center max-w-2xl mx-auto mb-16">
+      <span class="text-accent text-xs font-bold tracking-widest uppercase mb-2 block">{tr.home.archEyebrow}</span>
+      <h2 class="display-heading text-3xl md:text-4xl font-bold text-white mb-4 text-balance">{tr.home.archTitle}</h2>
+      <p class="text-text-secondary text-sm md:text-base leading-relaxed">{tr.home.archLead}</p>
+    </div>
+
+    <!-- 三层架构胶囊 -->
+    <div class="grid md:grid-cols-3 gap-6">
+      {tr.home.archLayers.map((layer) => (
+        <div class:list={[
+          'p-7 rounded-xl border relative transition-all duration-300 flex flex-col justify-between',
+          layer.current
+            ? 'border-2 border-accent bg-surface shadow-[0_0_35px_rgba(0,212,170,0.18)] scale-[1.02]'
+            : 'border-border/80 bg-surface/40 hover:bg-surface/70'
+        ]}>
+          <div>
+            {layer.current && (
+              <div class="absolute -top-3 right-4 px-2.5 py-0.5 rounded-full bg-accent text-background text-[10px] font-extrabold uppercase tracking-wider shadow-[0_0_12px_rgba(0,212,170,0.5)]">
+                You Are Here
+              </div>
+            )}
+            <div class:list={['text-xs font-mono mb-3 tracking-wide', layer.current ? 'text-accent font-semibold' : 'text-text-secondary/60']}>
+              {layer.num}
+            </div>
+            <h4 class="text-lg font-bold text-white mb-3">{layer.name}</h4>
+          </div>
+          <p class="text-xs text-text-secondary leading-relaxed mt-2">{layer.desc}</p>
+        </div>
+      ))}
+    </div>
+
+    <!-- 架构定论总结框 -->
+    <div class="mt-12 p-5 rounded-lg border border-border/70 bg-surface/60 text-center max-w-2xl mx-auto text-sm text-text-secondary tracking-wide">
+      <span class="text-white/90 font-medium">{tr.home.archSummary}</span>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 快速开始收束（Quick Start） -->
+<section id="quickstart" class="py-24 px-6 border-t border-border/50 relative">
+  <div class="max-w-4xl mx-auto text-center">
+    <span class="text-accent text-xs font-bold tracking-widest uppercase mb-3 block">{tr.home.actionEyebrow}</span>
+    <h2 class="display-heading text-3xl md:text-5xl font-bold text-white mb-6 text-balance">{tr.home.actionTitle}</h2>
+    <p class="text-text-secondary text-base mb-10 max-w-xl mx-auto">{tr.home.actionLead}</p>
+
+    <!-- 一行 CLI 快速命令栏 -->
+    <div class="max-w-xl mx-auto bg-surface border border-border rounded-lg p-2.5 flex items-center justify-between font-mono text-sm text-white mb-12 shadow-lg">
+      <div class="flex items-center gap-3 pl-3 overflow-hidden text-ellipsis whitespace-nowrap">
+        <span class="text-accent select-none">$</span>
+        <span class="text-accent">npm</span> <span>install -g a2ald && a2ald</span>
+      </div>
+      <button
+        type="button"
+        id="copy-cli-btn"
+        data-cmd={tr.home.actionCmd}
+        data-copied={tr.home.actionCmdCopied}
+        class="px-4 py-2.5 bg-[#1b2622] hover:bg-accent hover:text-background text-sm font-semibold rounded transition shrink-0 cursor-pointer"
+      >
+        <span class="btn-text">{tr.home.actionCmdBtn}</span>
+      </button>
+    </div>
+
+    <!-- 双向分流出口卡片 -->
+    <div class="grid sm:grid-cols-2 gap-6 text-left">
+      <a
+        href="https://github.com/a2al/a2al/releases"
+        target="_blank"
+        rel="noopener"
+        class="p-6 rounded-xl border border-border hover:border-accent/40 bg-surface/60 transition block group"
+      >
+        <div class="text-accent font-bold text-xs uppercase mb-2">{tr.home.actionCard1Eyebrow}</div>
+        <h4 class="text-xl font-bold text-white mb-2 group-hover:text-accent transition">{tr.home.actionCard1Title}</h4>
+        <p class="text-xs text-text-secondary leading-relaxed">{tr.home.actionCard1Desc}</p>
+      </a>
+
+      <a
+        href={d('/docs/user/getting-started')}
+        class="p-6 rounded-xl border border-border hover:border-accent/40 bg-surface/60 transition block group"
+      >
+        <div class="text-accent font-bold text-xs uppercase mb-2">{tr.home.actionCard2Eyebrow}</div>
+        <h4 class="text-xl font-bold text-white mb-2 group-hover:text-accent transition">{tr.home.actionCard2Title}</h4>
+        <p class="text-xs text-text-secondary leading-relaxed">{tr.home.actionCard2Desc}</p>
+      </a>
+    </div>
+
+    <!-- 技术底线与信任背书 -->
+    <div class="mt-12 text-sm text-text-secondary/80 flex flex-wrap justify-center items-center gap-x-6 gap-y-3">
+      {tr.home.actionTrustPills.map((pill, idx) => (
+        <>
+          <span>{pill}</span>
+          {idx < tr.home.actionTrustPills.length - 1 && <span>·</span>}
+        </>
+      ))}
+    </div>
+
+    <!-- 尾声收口：核心信条（作为协议注脚压舱石，工业极客质感） -->
+    <div class="mt-20 pt-12 border-t border-border/40 max-w-2xl mx-auto space-y-3">
+      <p class="text-sm sm:text-base text-text-secondary/80 font-normal leading-relaxed">
+        {tr.home.creedLine1}
+      </p>
+      <p class="text-sm sm:text-base text-text-secondary/80 font-normal leading-relaxed">
+        {tr.home.creedLine2}
+      </p>
+      <div class="pt-3 text-[11px] tracking-widest text-accent/70 uppercase font-mono">
+        {tr.home.creedSub}
+      </div>
     </div>
   </div>
 </section>
@@ -130,38 +341,45 @@ const visionLines = tr.home.visionLines.filter(Boolean)
   "keywords": "AI agent, agent discovery, decentralized networking, MCP, sovereign identity, peer-to-peer, agent protocol"
 })} />
 
-<!-- CTA Cards -->
-<section class="py-32 px-6">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-16">
-      <h2 class="text-3xl font-semibold text-white tracking-tight">{tr.home.ctaSectionTitle}</h2>
-    </div>
-    <div class="grid md:grid-cols-3 gap-6">
-      <a href={p('/quickstart')} class="group card flex flex-col hover:border-accent/50 transition-all duration-300 block">
-        <div class="text-accent text-xs font-bold tracking-widest uppercase mb-4">{tr.home.ctaCards[0].audience}</div>
-        <h3 class="text-white font-semibold text-2xl mb-3 group-hover:text-accent transition-colors">{tr.home.ctaCards[0].title}</h3>
-        <p class="text-text-secondary leading-relaxed mb-8 flex-1 text-sm">{tr.home.ctaCards[0].body}</p>
-        <div class="text-white font-medium text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all">
-          {tr.home.ctaCards[0].linkLabel} <span class="text-accent">→</span>
-        </div>
-      </a>
+<!-- 前端微交互脚本 -->
+<script>
+  function setupCopyActions() {
+    // 复制 Prompt 按钮
+    const promptBtn = document.getElementById('copy-hero-prompt');
+    if (promptBtn) {
+      const origText = promptBtn.querySelector('.btn-text')?.textContent || '';
+      promptBtn.addEventListener('click', () => {
+        const text = promptBtn.getAttribute('data-prompt') || '';
+        const copied = promptBtn.getAttribute('data-copied') || 'Copied';
+        navigator.clipboard.writeText(text).then(() => {
+          const span = promptBtn.querySelector('.btn-text');
+          if (span) span.textContent = copied;
+          setTimeout(() => {
+            if (span) span.textContent = origText;
+          }, 2500);
+        });
+      });
+    }
 
-      <a href="/docs/user/getting-started" class="group card flex flex-col hover:border-accent/50 transition-all duration-300 block">
-        <div class="text-accent text-xs font-bold tracking-widest uppercase mb-4">{tr.home.ctaCards[1].audience}</div>
-        <h3 class="text-white font-semibold text-2xl mb-3 group-hover:text-accent transition-colors">{tr.home.ctaCards[1].title}</h3>
-        <p class="text-text-secondary leading-relaxed mb-8 flex-1 text-sm">{tr.home.ctaCards[1].body}</p>
-        <div class="text-white font-medium text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all">
-          {tr.home.ctaCards[1].linkLabel} <span class="text-accent">→</span>
-        </div>
-      </a>
-      <a href="/docs/integration/mcp" class="group card flex flex-col hover:border-accent/50 transition-all duration-300 block">
-        <div class="text-accent text-xs font-bold tracking-widest uppercase mb-4">{tr.home.ctaCards[2].audience}</div>
-        <h3 class="text-white font-semibold text-2xl mb-3 group-hover:text-accent transition-colors">{tr.home.ctaCards[2].title}</h3>
-        <p class="text-text-secondary leading-relaxed mb-8 flex-1 text-sm">{tr.home.ctaCards[2].body}</p>
-        <div class="text-white font-medium text-sm inline-flex items-center gap-2 group-hover:gap-3 transition-all">
-          {tr.home.ctaCards[2].linkLabel} <span class="text-accent">→</span>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
+    // 复制 CLI 命令按钮
+    const cliBtn = document.getElementById('copy-cli-btn');
+    if (cliBtn) {
+      const origText = cliBtn.querySelector('.btn-text')?.textContent || '';
+      cliBtn.addEventListener('click', () => {
+        const cmd = cliBtn.getAttribute('data-cmd') || '';
+        const copied = cliBtn.getAttribute('data-copied') || 'Copied';
+        navigator.clipboard.writeText(cmd).then(() => {
+          const span = cliBtn.querySelector('.btn-text');
+          if (span) span.textContent = copied;
+          setTimeout(() => {
+            if (span) span.textContent = origText;
+          }, 2500);
+        });
+      });
+    }
+  }
+
+  // 页面初次加载和 Astro view transitions
+  setupCopyActions();
+  document.addEventListener('astro:page-load', setupCopyActions);
+</script>

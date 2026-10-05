@@ -18,13 +18,13 @@ const labels: Record<Locale, string> = {
 }
 ---
 
-<div class="flex items-center gap-1 rounded-md border border-border/60 bg-surface/40 p-0.5 text-xs font-medium">
+<div class="flex items-center gap-1 rounded-md border border-border/60 bg-surface/40 p-0.5 text-xs font-medium shrink-0 whitespace-nowrap">
   {
     locales.map((loc) => (
       <a
         href={localizePath(loc, pathKey)}
         class:list={[
-          'rounded px-2 py-1 transition-colors',
+          'rounded px-1.5 sm:px-2 py-1 whitespace-nowrap transition-colors',
           loc === locale
             ? 'bg-accent/15 text-accent'
             : 'text-text-secondary hover:text-white',

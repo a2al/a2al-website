@@ -1,143 +1,140 @@
-﻿---
+---
 title: Go SDK
-description: Embed A2AL directly into your Go program using the host and dht packages.
+description: Embed A2AL directly in a Go program — the host and dht levels, configuration, lifecycle, the agent-route frame and the debug endpoints.
+audience: developer
 ---
 
-Import the module:
-
-```
-github.com/a2al/a2al
+```go
+import "github.com/a2al/a2al"
 ```
 
-The primary entry point for most Go applications is `github.com/a2al/a2al/host`. Lower-level packages (`dht`, `protocol`, `identity`, `crypto`) are available when you need finer control.
+The entry point for most Go programs is `github.com/a2al/a2al/host`; when you need finer control, `dht`, `protocol`, `identity` and `crypto` are all available. **A program that only publishes, resolves and connects depends on `host` and should not import `daemon`.**
 
 ## Integration levels
 
-| Level | Package | Use when |
-|-------|---------|----------|
-| **Node runtime** | `github.com/a2al/a2al/host` | DHT + QUIC on one or two UDP ports, mutual TLS between agents, publish/resolve/connect helpers. Recommended for most applications. |
-| **DHT only** | `github.com/a2al/a2al/dht` | You provide transport and only need routing, bootstrap, and iterative `FIND_VALUE` / `STORE`. |
-| **Daemon** | `a2ald` (`cmd/a2ald`) | Non-Go integrations; local REST + MCP + Web UI. |
-
----
+| Level | Package | When to use it |
+| --- | --- | --- |
+| Node runtime | `github.com/a2al/a2al/host` | DHT + QUIC (one port or separate ports), mutual TLS, publish/resolve/connect helpers. Recommended for most applications. |
+| DHT only | `github.com/a2al/a2al/dht` | Bring your own transport stack and use only routing, bootstrapping and iterative `FIND_VALUE` / `STORE`. |
+| Daemon | `a2ald` | Non-Go integration; local REST + MCP + panel. |
 
 ## `host.Host`
 
-`Host` composes all lower layers into a single runtime: DHT node, QUIC transport, NAT sensing, and UPnP mapping.
+`Host` composes the lower layers into a single runtime: a DHT node, QUIC transport, NAT detection and UPnP mapping.
 
-### Configuration (`host.Config`)
+### `host.Config`
 
 | Field | Meaning |
-|-------|---------|
-| `KeyStore` | Required. Must list exactly one `Address`. |
-| `ListenAddr` | DHT UDP bind, e.g. `":4121"` (default). |
-| `QUICListenAddr` | If non-empty, QUIC binds separately from DHT. If empty, QUIC shares the DHT UDP socket. |
-| `PrivateKey` | Ed25519 key for QUIC/TLS. If nil, uses `EncryptedKeyStore.Ed25519PrivateKey`. |
-| `FallbackHost` | Optional advertised host when bind address and reflection data are ambiguous. |
-| `DisableUPnP` | Skip IGD UDP port mapping for the QUIC listen port. |
-| `ICESignalURL` | WebSocket base URL for ICE trickle signaling. When set, used as fallback when direct QUIC fails. |
-| `ICESTUNURLs` | `stun:` URIs for ICE gathering. |
-| `Logger` | `*slog.Logger`. If nil, `slog.Default()` is used. |
+| --- | --- |
+| `KeyStore` | Required. Must contain exactly one `Address`. |
+| `ListenAddr` | The DHT's UDP bind (default `":4121"`). A wildcard address is dual-stack; an explicit IPv4 / IPv6 host binds to that family. |
+| `QUICListenAddr` | When empty, QUIC shares the DHT's UDP socket; when set, it binds separately. |
+| `PrivateKey` | The Ed25519 private key used for QUIC / TLS; when empty, `EncryptedKeyStore.Ed25519PrivateKey` is used. |
+| `MinObservedPeers` | How many peers must agree before a reflexive address is accepted (default 3). |
+| `FallbackHost` | The address to publish when neither the bind address nor the reflexive observation is conclusive. |
+| `DisableUPnP` | Skip IGD mapping for the QUIC port (IPv4). |
+| `DisableIPv6` | Force IPv4-only (a library option, not a daemon TOML key). |
+| `ICESignalURL` / `ICESignalURLs` | The ICE WebSocket hub; `ICESignalURLs` wins when non-empty, and its first address is also written into `EndpointPayload.Signal`. |
+| `ICESTUNURLs` | `stun:` addresses; leaving them empty without TURN configured means public STUN is used. |
+| `ICETURNURLs` | Legacy `turn:` URLs with inline credentials; new code should prefer `TURNServers`. |
+| `TURNServers` | External TURN: `URL`, `Username`, `Credential`, `CredentialType` (`static` / `hmac` / `rest_api`). Credentials are generated per ICE session and never published to the DHT. |
+| `DisableRelay` | When true, TURN relays are not used by default; per call, `DialOptions.DisableRelay` does the same. Default false (with TURN configured, relaying is allowed). |
+| `ICENetworkTypes` | The network types ICE uses; UDP4 + UDP6 by default. |
+| `Logger` | `*slog.Logger`, defaulting to `slog.Default()`. |
+
+The internal DHT node's `RecordAuth` requires a self-signature or a valid delegation.
 
 ### Lifecycle
 
 ```go
-// 1. Create and start
+// 1. create and start
 h, err := host.New(cfg)
 
-// 2. Bootstrap into the network
+// 2. bootstrap into the network (seeds as ip:port)
 h.Node().BootstrapAddrs(ctx, bootstrapAddrs)
 
-// 3. Use
+// 3. use it
 h.PublishEndpoint(ctx, seq, ttl)
 record, err := h.Resolve(ctx, remoteAddr)
 conn, err := h.ConnectFromRecord(ctx, remoteAddr, record)
 
-// 4. Accept inbound connections
+// 4. accept inbound connections
 agentConn, err := h.Accept(ctx)
 
-// 5. Shut down
+// 5. shut down
 h.Close()
 ```
 
-### Primary methods
+### Main methods
 
-| Method | Role |
-|--------|------|
-| `PublishEndpoint(ctx, seq, ttl)` | Builds multi-candidate endpoint payload (reflection, UPnP, fallback), signs, stores on DHT. |
-| `PublishEndpointForAgent(ctx, agentAddr, seq, ttl)` | Same for a registered delegated agent. |
-| `Resolve(ctx, target Address)` | Iterative DHT lookup; returns `*protocol.EndpointRecord`. |
-| `Connect(ctx, expectRemote Address, udpAddr)` | QUIC dial to one UDP address with mutual TLS. |
-| `ConnectFromRecord(ctx, expectRemote Address, er)` | Happy Eyeballs over all endpoints in the record; ICE fallback if all fail. |
-| `ConnectFromRecordFor(ctx, localAgent, expectRemote, er)` | Same, using TLS credentials for a specific local agent. |
-| `Accept(ctx)` | Blocks for inbound QUIC; returns `*AgentConn` with `Local` / `Remote` addresses. |
-| `RegisterAgent(addr, priv)` | Add an extra agent identity on the same QUIC listener. |
-| `RegisterDelegatedAgent(addr, opPriv, delegationCBOR)` | Register an agent with a master-derived AID and operational key. |
-| `SendMailbox` / `PollMailbox` | DHT mailbox for the default host identity. |
-| `RegisterTopic` / `RegisterTopicForAgent` | Topic rendezvous: publish service capability record. |
-| `SearchTopic` / `SearchTopics` | Discover agents by capability name. |
-| `Close()` | Shuts down QUIC, mux, and DHT. |
+| Method | What it does |
+| --- | --- |
+| `PublishEndpoint` / `PublishEndpointForAgent` | Assemble a multi-candidate endpoint payload (reflexive, UPnP, fallback), sign it and store it in the DHT. |
+| `Resolve` | Iterative lookup, returning a `*protocol.EndpointRecord`. |
+| `Connect` | Establish a QUIC connection to a single UDP address and send the agent-route frame. |
+| `ConnectFromRecord` / `ConnectFromRecordFor` | Happy Eyeballs across every endpoint in the record; falls back to ICE when direct connections fail and signalling addresses exist. Returns `(conn, isRelayed, err)`; when a relay is configured but disabled and direct connection fails, it returns `ErrRelayRequired`. |
+| `Accept` | Accept inbound QUIC and return an `*AgentConn`. |
+| `QUICDialTargets` / `FirstQUICAddr` | Derive ordered UDP targets from a record. |
+| `BuildEndpointPayload` | Build candidates only, without writing to the DHT. |
+| `SymmetricNATReachabilityHint` | Non-empty when symmetric NAT is detected (a relay may still be needed). |
+| `RegisterAgent` / `RegisterDelegatedAgent` / `UnregisterAgent` / `RegisteredAgents` | Attach more AIDs to the same listener. |
+| `SendMailbox` / `PollMailbox` (with `…ForAgent` variants) | Encrypted notes. |
+| `RegisterTopic(s)` / `SearchTopic(s)` (with `…ForAgent` variants) | Capability name rendezvous. |
+| `StartDebugHTTP` / `DebugHTTPHandler` | Read-only JSON. |
 
-### `AgentConn`
+`AgentConn` embeds `quic.Connection` and exposes two AIDs, `Local` and `Remote`.
 
-Embeds `quic.Connection`. Fields:
+### The agent-route frame
 
-- `Local` — agent `Address` selected for this connection
-- `Remote` — peer `Address` from the mutual TLS certificate (inbound)
+After TLS, the client writes **4 magic bytes + the 21-byte target AID** on stream 0:
 
----
+- **`a2r2`** (current): a length-prefixed control message, after which both sides FIN that stream and data moves to later streams. `host` implements this version.
+- **`a2r1`**: still accepted inbound (the frame itself is all that is parsed).
+
+When several agents share one listener, TLS SNI acts as a secondary hint.
 
 ## `dht.Node`
 
-Use when you implement your own transport stack and only need Kademlia-style RPCs.
-
-### Configuration (`dht.Config`)
-
 | Field | Meaning |
-|-------|---------|
-| `Transport` | Required. DHT UDP (or mux) transport. |
-| `Keystore` | Required. Exactly one identity. |
-| `RecordAuth` | Optional callback to enforce publish authority (self-sign or delegation check). |
+| --- | --- |
+| `Transport` | Required. |
+| `Keystore` | Required. One identity. |
+| `OnObservedAddr` | Callback for the reflexive address. |
+| `RecordAuth` | Runs after `VerifySignedRecord`; empty means no authority check. |
 
-### Lifecycle
-
-```go
-n := dht.NewNode(dht.Config{Transport: t, Keystore: ks})
-n.Start()
-n.BootstrapAddrs(ctx, addrs)
-n.PublishEndpointRecord(ctx, rec)
-result, err := n.NewQuery(20).Resolve(ctx, nodeID)
-n.Close()
-```
-
-### Common methods
-
-| Method | Role |
-|--------|------|
-| `BootstrapAddrs(ctx, []net.Addr)` | Bootstrap — only `ip:port` required; identity learned from PONG. |
-| `PingIdentity(ctx, addr)` | Returns `PeerIdentity{Address, NodeID}`. |
-| `PublishEndpointRecord(ctx, rec)` | STORE signed record to closest peers. |
-| `PublishTopicRecord(ctx, storeKey, rec)` | STORE topic record at `TopicNodeID`. |
-| `NewQuery(n).Resolve(ctx, NodeID)` | Iterative endpoint fetch. |
-
----
+`BootstrapAddrs` accepts `ip:port` only. `PublishMailboxRecord` / `PublishTopicRecord` write records under the recipient's or the topic's NodeID respectively.
 
 ## Identity and signing
 
-| Package | Items |
-|---------|-------|
+| Package | Contents |
+| --- | --- |
 | `github.com/a2al/a2al` | `Address`, `NodeID`, `ParseAddress`, `NodeIDFromAddress` |
-| `github.com/a2al/a2al/crypto` | `KeyStore`, `EncryptedKeyStore`, `AddressFromPublicKey`, `GenerateEd25519` |
-| `github.com/a2al/a2al/identity` | `SignDelegation`, `EncodeDelegationProof`, `ParseDelegationProof`, `VerifyDelegation` |
+| `…/crypto` | `KeyStore`, `EncryptedKeyStore`, `AddressFromPublicKey`, `GenerateEd25519` |
+| `…/identity` | `SignDelegation`, `VerifyDelegation`, Ethereum / Paralism helpers |
 
----
+## `protocol`
 
-## Not yet implemented
+| Item | What it does |
+| --- | --- |
+| `SignedRecord` | The wire-format CBOR, optionally carrying a `Delegation`. |
+| `EndpointPayload` | `Endpoints` (`quic://host:port` or `quic://[v6]:port`), `NatType`, `Signal`, `Signals`. `Turns` is only decoded from old records — **new publications no longer write it**. |
+| `SignEndpointRecord` / `SignEndpointRecordDelegated` | Master-key signing vs operational user-key signing. |
+| `ParseEndpointRecord` / `VerifySignedRecord` | Verify the signature, the TTL and the authority (`RecordAuth`). |
+| Mailbox | `RecTypeMailbox` `0x80`; X25519 + AES-GCM helpers. |
+| Topics | `RecTypeTopic` `0x10`; keyed by `SHA-256("topic:" ‖ name)`; `DiscoverFilter`. |
 
-- **TURN relay** — config fields exist; server-side relay not yet integrated for symmetric-NAT fallback
-- **IPv6 dual-stack** — wire format supports IPv6; `New()` currently uses `udp4` only
+`timestamp` and `TTL` have to cover the current time.
 
----
+## `config` and the debug endpoints
+
+The `config` package handles the daemon's TOML: `Default()`, `Validate()`, `LoadFile` / `Save`, `ApplyEnv`. For examples, see `doc/a2ald-config.example.toml` in the repository.
+
+Debug HTTP is best bound to `dht.DebugHTTPAddr` (`127.0.0.1:2634`); the daemon exposes the same set under `/debug/` on its administrative address.
+
+| Path | Source |
+| --- | --- |
+| `/debug/identity`, `/debug/routing`, `/debug/store`, `/debug/stats` | `dht.Node` |
+| `/debug/host` | `Host`: QUIC bindings, registered agents, a NAT summary |
 
 ## Tests
 
@@ -145,4 +142,12 @@ n.Close()
 go test -vet=off -count=1 ./...
 ```
 
-See the [Go Packages reference](/docs/reference/go-packages) for the complete API surface, including `protocol`, `config`, and debug HTTP endpoints.
+Each project under `examples/` has its own `go.mod` with a `replace` pointing at the module root.
+
+## Related pages
+
+| Goal | Page |
+| --- | --- |
+| Every exported symbol | [Go Packages](/docs/reference/go-packages) |
+| Architecture and module layout | [Architecture Overview](/docs/integration/overview) |
+| Protocol and wire format | [Protocol Specification](/docs/spec/protocol) |

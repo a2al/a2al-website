@@ -49,3 +49,8 @@
   color: var(--sl-color-white) !important;
   font-weight: 600;
 }
+
+/* Keep short table labels from breaking mid-word (CJK wraps anywhere). */
+.nowrap {
+  white-space: nowrap;
+}

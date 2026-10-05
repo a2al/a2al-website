@@ -1,89 +1,68 @@
-﻿---
+---
 title: Getting Started
-description: Understand what A2AL is and choose the right path to get your agent on the network.
+description: Meet A2AL and take the shortest route to getting your agent online and callable.
+audience: user
 ---
 
-A2AL gives your AI agent a permanent cryptographic address and makes it globally discoverable and connectable — without a domain, cloud account, or anyone's permission.
+Between agents, and between devices and people — locally or across the internet — A2AL lets them talk directly: **point-to-point encrypted connections, with no third party in the data path**, and it works **out of the box with no configuration** — no sign-up, no domain name, no network settings to touch. From install to your first connection takes under three minutes, and it ends with something you can verify yourself: a line the other side left for you, or the result of a call.
 
-This page covers the core concepts and helps you find the right starting point.
+**An easier route: have your AI assistant install it for you.** Hand it the line below (Claude, Cursor or Codex will do):
 
----
+> Read this: <https://a2al.org/llms.txt>. Install A2AL, create an identity and publish it, then get me connected to a first agent so we can start collaborating.
 
-## Three things to understand
+It will work through the four steps below on your behalf, and you do not have to touch anything in between; only the MCP route needs the host reloaded once. **The master key is shown once, at creation time** — save it if you intend to keep this AID around; for temporary use, you can skip it.
 
-### AID — your agent's permanent address
+A2AL is agent-friendly: in our testing, agents complete complex collaboration over A2AL more fluently than people do. If your scenario is agent-to-agent work, telling your agent to "go to a2al.org, download A2AL and use it" is all it takes — nothing else needs managing.
 
-An **AID** (Agent Identifier) is derived from a key pair you generate locally. It looks like:
+## Two concepts
 
+| Name | In one line |
+| --- | --- |
+| **`a2ald`** | The long-running program on your machine: it manages keys, resolves addresses and establishes connections. Once connected, data flows between the two ends, encrypted. |
+| **AID** | Your address. Generated from a local key, it cannot be revoked or redirected by any platform; hand it out like a link, and it stays the same across machines and networks. Generate as many as you need. |
+
+## Your first connection in three minutes
+
+**1 Install and start**
+
+```bash
+npm install -g a2ald     # or pip install a2al, or a binary from GitHub Releases
+a2ald
 ```
-a2alEKFspDoevpFxLHiagvdBFqMVFq3sZ1JDsFdJKP    ← Ed25519 (native)
-0x3a7fc8f294b4e53e91a5b7a4f2c9d0e1b3c8a2f9    ← Ethereum wallet address
-```
 
-- **No one assigns it.** You generate the key pair; the AID is derived from the public key.
-- **Permanent.** The AID never changes, even as your agent's IP, network, or machine changes.
-- **Portable.** Share your AID like a contact — whoever has it can reach your agent, anywhere.
+Per-platform packages and instructions (Windows / macOS / Linux) are in [Quick Start](/quickstart). On Windows, if the first run warns about an "unknown publisher", choose **More info → Run anyway** — the usual prompt for an unsigned open-source binary.
 
-The private key is the sole proof of ownership. Keep it safe.
+**2 Open the panel**: visit <http://localhost:2121> in a browser.
 
-### The Tangled Network — global P2P directory
+**3 Create an identity and publish it**: in the panel, click **Agents → Add Identity** and follow the prompts. The AID it generates is the address you hand out from then on, and once publishing succeeds the card reads **Published**. The panel shows the **master key** once, so save it yourself: it is the only credential for this address.
 
-When you publish an agent, a signed record mapping its AID to current endpoints is distributed across a peer-to-peer network. Anyone can resolve any AID to find its live endpoints — no registry, no central server.
+**4 Try a connection**: give your AID to the other side, or paste theirs into **Discover** — from that one screen you can call their HTTP service, open a **tunnel**, leave a **note**, or start a **chat**.
 
-The Tangled Network only stores *"where to find me now."* Your application data never flows through it.
+![a2ald panel: create and publish an identity, then call an agent by address](/img/a2ald/quickstart-1.gif)
 
-### `a2ald` — your local daemon
+> **What success looks like**: on the command line, `a2al status` reads `published … ago`; one to two minutes after the first publish, your AID can be resolved from outside.
 
-`a2ald` runs on your machine and handles everything: DHT participation, NAT traversal, QUIC connection negotiation, cryptographic signing. You talk to it via the Web UI, CLI, REST API, or MCP tools.
+## Next steps
 
-It's a *gateway*, not a *proxy*. After establishing a connection, it steps aside — your data flows directly between agents.
+| What you want to do | Channel |
+| --- | --- |
+| Call a model or an API on someone else's machine | Request–response · [Connect by AID](/docs/user/connect-by-aid) |
+| Let other agents use a service of yours | Request–response · [Let others call you](/docs/user/inbound) |
+| SSH into another machine, or reach a database on its private network | Persistent connection · [Tunnel](/docs/user/tunnel) |
+| Hand off a task or a result even when the peer is offline | One-way message · [Messages](/docs/user/messaging) |
+| Move something forward with another agent, back and forth | Duplex session · [Chat](/docs/user/messaging) |
+| Move something forward with several agents and people | Multi-party · [Rooms](/docs/user/rooms) |
 
----
+For what each of the five channels can and cannot do — and when each of them is the wrong choice — see [Choose the Right Channel](/docs/user/choose-channels).
 
-## The three operations
+## Ways to use it
 
-| Operation | What happens |
-|-----------|-------------|
-| **Publish** | Sign your AID + current endpoints and store on the Tangled Network. Your agent becomes discoverable. |
-| **Discover** | Search by service capability (e.g. `lang.translate`) or resolve a known AID directly to its endpoints. |
-| **Connect** | Negotiate a direct QUIC connection with mutual identity verification. Returns a local tunnel address. |
+All five interfaces below talk to the same daemon: identities created in the panel, published capabilities and joined rooms are immediately available from the command line and from your AI assistant.
 
----
-
-## Choose your path
-
-### I just want to get my agent on the network
-
-→ Follow the [Quick Start](/quickstart) — download `a2ald`, open the Web UI, and your agent is live in under 5 minutes.
-
-### I'm integrating A2AL into an application
-
-Choose based on your stack:
-
-| Path | Best for | Next step |
-|------|----------|-----------|
-| **MCP** | Claude, Cursor, Windsurf, or any MCP-compatible tool | [MCP Setup](/docs/integration/mcp) |
-| **REST API** | Any language, fastest to start | [REST Quickstart](/docs/integration/rest) |
-| **Go SDK** | Go programs, maximum control | [Go SDK](/docs/integration/go-sdk) |
-| **Python** | Python agents | [Python Sidecar](/docs/integration/python) |
-
-### I want to understand the architecture first
-
-→ [Architecture Overview](/docs/integration/overview) — daemon mode vs. library mode, module map, and how the layers fit together.
-
----
-
-## Key concepts in brief
-
-| Term | Meaning |
-|------|---------|
-| **AID** | Agent Identifier. Cryptographic address derived from a key pair. Permanent, self-issued. |
-| **Tangled Network** | Global P2P DHT that stores and resolves AID endpoint records. |
-| **Publish** | Write a signed endpoint record for an AID to the Tangled Network. |
-| **Resolve** | Look up current endpoints for a given AID. |
-| **Discover** | Search for agents by service capability name. |
-| **Connect** | Negotiate a direct encrypted QUIC connection. Returns a local tunnel address (`127.0.0.1:<port>`). |
-| **Service** | A declared capability (e.g. `lang.translate`, `code.review`) published alongside an endpoint record. |
-| **Note** | An encrypted async message stored on the DHT for an offline recipient. |
-| **Master key** | Derives the AID. Keep offline. Proof of permanent identity ownership. |
-| **Operational key** | Used by `a2ald` day-to-day. Carries a delegation proof from the master key. Rotatable. |
+| Interface | Entry point | Best for |
+| --- | --- | --- |
+| **Web UI** | Open <http://localhost:2121> in a browser | First steps and everyday work — manage identities, look up and call, send and receive messages, take part in rooms, with no commands to memorise. See [Web UI](/docs/user/web-ui) |
+| **CLI** | `a2al` / `a2ald` | Scripts and automation, servers and CI. Upgrades (`a2ald update`) are currently available from the CLI and MCP only |
+| **AI assistant** | Any of MCP, CLI or REST | Let the agent handle installation, discovery, calls and collaboration on its own. See [Hand it to Your AI Assistant](/docs/user/ai-assistant) |
+| **Local REST API** | `http://127.0.0.1:2121` | Wire A2AL into existing systems in any language, with no SDK. See [Integration overview](/docs/integration/overview) |
+| **Go SDK / Python sidecar** | `import` / `pip install a2al` | Embed A2AL inside your own program rather than running it alongside. See [Integration overview](/docs/integration/overview) |

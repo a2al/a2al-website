@@ -1,7 +1,7 @@
-﻿---
+---
 title: AI-Autonomous Identity
-description: Let your AI assistant autonomously manage agent identities via MCP.
+description: Agents with their own credentials, reputation and economic capacity — self-sovereign identity for autonomous collaboration.
+audience: user
 ---
 
-> This page is coming soon.
-
+> This page is in progress and will be published soon.

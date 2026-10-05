@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '@/i18n/config'
-import { localizePath } from '@/i18n/paths'
+import { docsPath, localizePath } from '@/i18n/paths'
 import { t } from '@/i18n/strings'
 
 interface Props {
@@ -10,6 +10,7 @@ interface Props {
 const { locale } = Astro.props
 const tr = t(locale)
 const p = (path: string) => localizePath(locale, path)
+const d = (path: string) => docsPath(locale, path)
 
 const tabActive =
   'flex-1 px-5 py-3.5 text-sm font-medium transition-all text-accent border-b-2 border-accent bg-surface/50'
@@ -25,10 +26,10 @@ const tabIdle =
       <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-accent text-xs font-semibold tracking-widest uppercase mb-8">
         {tr.quickstart.eyebrow}
       </div>
-      <h1 class="text-4xl md:text-6xl font-bold text-white leading-tight tracking-tight mb-6">
+      <h1 class="display-heading text-4xl md:text-6xl font-bold text-white tracking-tight mb-6 md:whitespace-pre-line">
         {tr.quickstart.titleBefore}<span class="text-transparent bg-clip-text bg-gradient-to-r from-accent to-[#00b894]">{tr.quickstart.titleAccent}</span>
       </h1>
-      <p class="text-xl md:text-2xl text-text-secondary leading-relaxed max-w-2xl mx-auto font-light">
+      <p class="text-xl md:text-2xl text-text-secondary leading-relaxed max-w-2xl mx-auto font-light whitespace-pre-line">
         {tr.quickstart.subtitle}
       </p>
     </div>
@@ -37,7 +38,8 @@ const tabIdle =
       <div class="relative p-8 md:p-12 rounded-2xl bg-surface/40 border border-border/50 backdrop-blur-sm group hover:border-accent/30 transition-colors">
         <div class="absolute -top-5 left-8 md:left-12 w-10 h-10 rounded-full bg-surface border border-border text-accent font-bold flex items-center justify-center shadow-lg group-hover:shadow-[0_0_20px_rgba(0,212,170,0.3)] transition-all">1</div>
 
-        <h2 class="text-2xl text-white font-semibold mb-8 mt-2 tracking-tight">{tr.quickstart.step1Title}</h2>
+        <h2 class={`text-2xl text-white font-semibold mt-2 tracking-tight ${tr.quickstart.step1Lead ? 'mb-3' : 'mb-8'}`}>{tr.quickstart.step1Title}</h2>
+        {tr.quickstart.step1Lead && <p class="text-text-secondary text-lg mb-8 font-light">{tr.quickstart.step1Lead}</p>}
 
         <div class="border border-border/60 rounded-xl overflow-hidden bg-background/50 shadow-inner">
           <div class="flex border-b border-border/60 bg-surface/30">
@@ -45,7 +47,7 @@ const tabIdle =
             <button type="button" class={tabIdle} data-tab="macos">{tr.quickstart.osMac}</button>
             <button type="button" class={tabIdle} data-tab="linux">{tr.quickstart.osLinux}</button>
           </div>
-          <div class="p-6 md:p-8 min-h-[220px]">
+          <div class="p-6 md:p-8 min-h-[200px] flex flex-col justify-center">
             <div data-panel="windows" class="animate-in fade-in duration-300">
               <ol class="space-y-5 text-text-secondary">
                 <li class="flex items-start gap-3">
@@ -68,6 +70,11 @@ const tabIdle =
                   </span>
                 </li>
               </ol>
+              {tr.quickstart.winNote && (
+                <p class="mt-6 pt-5 border-t border-border/50 text-sm text-text-secondary/70 leading-relaxed">
+                  {tr.quickstart.winNote}
+                </p>
+              )}
             </div>
             <div data-panel="macos" hidden class="animate-in fade-in duration-300">
               <ol class="space-y-5 text-text-secondary">
@@ -92,6 +99,20 @@ const tabIdle =
               </div>
             </div>
             <div data-panel="linux" hidden class="animate-in fade-in duration-300">
+              {tr.quickstart.linuxFrom && (
+                <div class="flex items-start gap-3 text-text-secondary mb-6">
+                  <span class="text-accent/60 mt-0.5">•</span>
+                  <span>
+                    {tr.quickstart.linux1}
+                    <a href="https://github.com/a2al/a2al/releases/latest" class="whitespace-nowrap text-white hover:text-accent font-medium border-b border-white/20 hover:border-accent transition-colors" target="_blank" rel="noopener">a2al_*.deb</a>
+                    <span class="text-text-secondary/50 mx-1">/</span>
+                    <a href="https://github.com/a2al/a2al/releases/latest" class="whitespace-nowrap text-white hover:text-accent font-medium border-b border-white/20 hover:border-accent transition-colors" target="_blank" rel="noopener">a2al-*.rpm</a>
+                    <span class="text-text-secondary/50 mx-1">/</span>
+                    <a href="https://github.com/a2al/a2al/releases/latest" class="whitespace-nowrap text-white hover:text-accent font-medium border-b border-white/20 hover:border-accent transition-colors" target="_blank" rel="noopener">a2al_*.tar.gz</a>
+                    {tr.quickstart.linuxFrom}
+                  </span>
+                </div>
+              )}
               <div class="space-y-6 text-text-secondary">
                 <div>
                   <p class="mb-3 text-sm font-medium text-white/80">{tr.quickstart.linuxDeb}</p>
@@ -136,13 +157,13 @@ const tabIdle =
 
         <a
           href={p('/screenshots')}
-          class="group/preview mt-6 block rounded-xl border border-border/60 bg-background/40 overflow-hidden hover:border-accent/40 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          class="group/preview mt-6 mx-auto block max-w-[32rem] rounded-xl border border-border/60 bg-background/40 overflow-hidden hover:border-accent/40 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
         >
-          <div class="relative aspect-[16/10] max-h-[min(26rem,52vw)] md:max-h-[22rem] bg-surface/30">
+          <div class="relative aspect-[3/2] bg-surface/30">
             <img
               src="/screenshots/screenshot-agent.png"
               alt={tr.quickstart.step2PreviewAlt}
-              class="absolute inset-0 w-full h-full object-contain object-top p-3 md:p-4"
+              class="absolute inset-0 w-full h-full object-cover object-top"
               loading="lazy"
               decoding="async"
             />
@@ -186,9 +207,45 @@ const tabIdle =
         </div>
       </div>
 
+      {
+        tr.quickstart.step4Title && tr.quickstart.step4Items && (
+          <div class="relative p-8 md:p-12 rounded-2xl bg-surface/40 border border-border/50 backdrop-blur-sm group hover:border-accent/30 transition-colors">
+            <div class="absolute -top-5 left-8 md:left-12 w-10 h-10 rounded-full bg-surface border border-border text-accent font-bold flex items-center justify-center shadow-lg group-hover:shadow-[0_0_20px_rgba(0,212,170,0.3)] transition-all">
+              4
+            </div>
+
+            <h2 class="text-2xl text-white font-semibold mb-6 mt-2 tracking-tight">{tr.quickstart.step4Title}</h2>
+            <p class="text-text-secondary text-lg mb-6 font-light">{tr.quickstart.step4Lead}</p>
+
+            <ul class="grid sm:grid-cols-2 gap-x-8 gap-y-4 text-text-secondary mb-6">
+              {tr.quickstart.step4Items.map((item) => (
+                <li class="flex items-start gap-3">
+                  <span class="text-accent/60 mt-0.5">•</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            {tr.quickstart.step4Note && (
+              <p class="text-text-secondary/90 font-light leading-relaxed mb-8">{tr.quickstart.step4Note}</p>
+            )}
+
+            <img
+              src="/img/a2ald/quickstart-1.gif"
+              alt={tr.quickstart.step4GifAlt}
+              width="1200"
+              height="675"
+              loading="lazy"
+              decoding="async"
+              class="w-full rounded-xl border border-border/60 bg-background/50"
+            />
+          </div>
+        )
+      }
+
       <!-- Success Message -->
       <div class="flex items-center justify-center py-6">
-        <div class="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-accent/5 border border-accent/20 text-accent text-lg font-medium shadow-[0_0_30px_rgba(0,212,170,0.1)] backdrop-blur-sm relative">
+        <div class="inline-flex items-center gap-3 px-6 md:px-8 py-4 rounded-full bg-accent/5 border border-accent/20 text-accent text-lg font-medium shadow-[0_0_30px_rgba(0,212,170,0.1)] backdrop-blur-sm relative">
           <div class="absolute inset-0 rounded-full border border-accent/30 animate-pulse"></div>
           <div class="w-7 h-7 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
             <svg class="w-4 h-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -200,36 +257,44 @@ const tabIdle =
       </div>
     </div>
 
-    <div class="mt-24 p-10 rounded-2xl bg-gradient-to-br from-surface/80 to-background border border-border relative overflow-hidden">
-      <div class="absolute right-0 top-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] pointer-events-none"></div>
-      <div class="relative z-10">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-semibold tracking-widest uppercase mb-6">
-          {tr.quickstart.mcpEyebrow}
-        </div>
-        <h3 class="text-2xl text-white font-semibold mb-4 tracking-tight">{tr.quickstart.mcpTitle}</h3>
-        <p class="text-text-secondary text-lg font-light leading-relaxed mb-8 max-w-2xl">
-          {tr.quickstart.mcpBodyBefore}
-          <strong class="text-white font-medium">{tr.quickstart.mcpBodyStrong}</strong>
-          {tr.quickstart.mcpBodyAfter}
-          <em class="text-white/80 block mt-4 p-4 bg-[#0a0f0e] border border-border/50 rounded-lg not-italic font-mono text-sm">{tr.quickstart.mcpQuote}</em>
-        </p>
+    <!-- Optional route, not step 5: separated by a rule and styled as an aside -->
+    <div class="mt-24 pt-16 border-t border-border/50">
+      <div class="rounded-2xl border border-dashed border-accent/30 bg-accent/[0.04] p-8 md:p-10 relative overflow-hidden">
+        <div class="absolute right-0 top-0 w-64 h-64 bg-accent/5 rounded-full blur-[80px] pointer-events-none"></div>
+        <div class="relative z-10">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-background/70 border border-border text-text-secondary text-xs font-semibold tracking-widest uppercase mb-6">
+            {tr.quickstart.mcpEyebrow}
+          </div>
+          <h3 class="text-2xl text-white font-semibold mb-4 tracking-tight">{tr.quickstart.mcpTitle}</h3>
+          <p class="text-text-secondary text-lg font-light leading-relaxed mb-8 max-w-2xl">
+            {tr.quickstart.mcpBodyBefore}
+            <strong class="text-white font-medium">{tr.quickstart.mcpBodyStrong}</strong>
+            {tr.quickstart.mcpBodyAfter}
+            <em class="text-white/80 block mt-4 p-4 bg-[#0a0f0e] border border-border/50 rounded-lg not-italic font-mono text-sm">{tr.quickstart.mcpQuote}</em>
+          </p>
+          {tr.quickstart.mcpNote && <p class="text-text-secondary/80 text-sm font-light leading-relaxed mb-8 max-w-2xl">{tr.quickstart.mcpNote}</p>}
 
-        <a href="/docs/integration/mcp" class="inline-flex items-center gap-2 text-white font-medium text-sm group">
-          <span class="border-b border-white/30 group-hover:border-accent transition-colors pb-0.5">{tr.quickstart.mcpLink}</span>
-          <span class="text-accent group-hover:translate-x-1 transition-transform">→</span>
-        </a>
+          <a href={d('/docs/integration/mcp')} class="inline-flex items-center gap-2 text-white font-medium text-sm group">
+            <span class="border-b border-white/30 group-hover:border-accent transition-colors pb-0.5">{tr.quickstart.mcpLink}</span>
+            <span class="text-accent group-hover:translate-x-1 transition-transform">→</span>
+          </a>
+        </div>
       </div>
     </div>
 
     <div class="mt-32 pt-16 border-t border-border/50">
       <h2 class="text-2xl text-white font-semibold tracking-tight mb-8 text-center">{tr.quickstart.nextTitle}</h2>
-      <div class="grid sm:grid-cols-2 gap-6">
+      <div
+        class={`grid gap-px rounded-2xl border border-border/50 bg-border/50 overflow-hidden ${
+          tr.quickstart.nextSteps.length === 3 ? 'min-[840px]:grid-cols-3' : 'min-[840px]:grid-cols-2'
+        }`}
+      >
         {
           tr.quickstart.nextSteps.map((step) => (
-            <a href={step.href} class="group p-6 rounded-xl border border-border/50 bg-surface/30 hover:bg-surface hover:border-accent/40 transition-all flex flex-col justify-center text-center">
+            <a href={d(step.href)} class="group px-6 py-6 flex flex-col justify-center text-center bg-background hover:bg-surface transition-colors">
               <div class="text-accent text-xs font-bold tracking-widest uppercase mb-3">{step.eyebrow}</div>
               <div class="text-white font-semibold text-lg mb-2 group-hover:text-accent transition-colors">{step.title}</div>
-              <div class="text-text-secondary text-sm font-light">{step.desc}</div>
+              <div class="text-text-secondary text-sm font-light text-balance">{step.desc}</div>
             </a>
           ))
         }

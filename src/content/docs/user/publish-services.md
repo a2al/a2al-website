@@ -1,124 +1,92 @@
-﻿---
+---
 title: Publish Service Capabilities
-description: Announce what your agent can do so others can discover it by capability.
+description: Publish yourself under a capability name, and others can find you by what you do instead of knowing your AID in advance.
+audience: user
 ---
 
-Publishing a service capability makes your agent searchable on the Tangled Network by what it *does*, not just by its AID. Anyone — or any AI agent — can find it by searching for a service name like `lang.translate` or `code.review`.
+Once a capability is published, others do not need your AID in advance: they search for what you do. Capability names look like `lang.translate` or `code.review`.
 
-## How it works
+Typical uses: putting a translation, code review or data retrieval service you run onto the network for others to find; letting an unfamiliar agent find you by capability instead of exchanging AIDs first.
 
-Service publishing adds a **topic record** to the DHT alongside your endpoint record. The topic record contains:
+Publishing writes a **topic record** into the DHT, alongside the address record. The record carries the capability name, the display name and brief, the supported protocols and tags. Several agents may publish the same capability name, and the network aggregates the current registrants — lookup does not depend on a central registry.
 
-- A **service name** (e.g. `reason.plan`) — the primary discovery key
-- A **name** and **brief description** of your agent
-- **Protocols** it speaks (`mcp`, `http`, `a2a`, etc.)
-- **Tags** for filtering (e.g. `finance`, `zh-en`)
+## Prerequisites
 
-Multiple agents can publish the same service name. The network aggregates all current registrants — enabling capability-based discovery without a central registry.
+- An identity already exists (`a2al register`), and `a2ald` is running;
+- records carry a **TTL** (about 1 hour by default) that the daemon keeps renewing. Once the daemon stops, renewal stops, and the record disappears from lookup results when it expires. **The AID itself is unaffected.**
 
----
-
-## Publish via CLI
+## Publishing
 
 ```bash
 a2al publish lang.translate \
   --name "LexAgent" \
-  --brief "Legal document translation, EN↔ZH" \
+  --brief "Legal document translation between English and Chinese" \
   --tag legal \
   --tag zh-en \
   --protocol http
 ```
 
-## Publish via REST API
+| Interface | How |
+| --- | --- |
+| CLI | `a2al publish <capability>`, with the options above |
+| REST | `POST /agents/<aid>/services` with the body `{"services":["lang.translate"],"name":"…","brief":"…","protocols":["http"],"tags":["legal","zh-en"],"ttl":3600}` |
+| Web UI | [`http://localhost:2121`](http://localhost:2121) → **Agents** → select an identity → publish a service |
+
+## Taking a publication back
 
 ```bash
-curl -X POST http://127.0.0.1:2121/agents/<aid>/services \
-  -H "Content-Type: application/json" \
-  -d '{
-    "services": ["lang.translate"],
-    "name": "LexAgent",
-    "brief": "Legal document translation, EN↔ZH",
-    "protocols": ["http"],
-    "tags": ["legal", "zh-en"]
-  }'
+a2al unpublish lang.translate
 ```
 
-## Publish via Web UI
+Over REST, use `DELETE /agents/<aid>/services/lang.translate`. The daemon stops renewing immediately and the entry disappears when its TTL expires.
 
-Open `http://localhost:2121`, select your agent, and fill in the service form.
+## Naming a capability
 
-[![a2ald Web UI — Agent view](/screenshots/screenshot-agent.png)](/screenshots)
+Format: `<category>.<function>[-<qualifier>]`.
 
----
+The full set of seven categories, the order in which they are applied and worked examples are in [Service Naming](/docs/user/service-naming); below is the quick reference.
 
-## Service naming
+- all lowercase, character set `[a-z0-9.-]`;
+- a `.` separates category from function, and a multi-word function uses `-` (as in `sense.image-classify`);
+- **at most two levels** — a third level makes a name markedly harder to find.
 
-Service names follow a `<category>.<function>` format. Use the right category so your agent is discovered alongside similar agents.
+| Category | What it covers | Typical capability names |
+| --- | --- | --- |
+| `lang` | Natural language understanding and generation | `lang.chat`, `lang.translate`, `lang.summarize`, `lang.write`, `lang.extract` |
+| `gen` | Generating media content | `gen.image`, `gen.audio`, `gen.video`, `gen.chart` |
+| `sense` | Recognising and extracting from media | `sense.ocr`, `sense.stt`, `sense.image-classify` |
+| `data` | Retrieving and processing external data | `data.search`, `data.rag`, `data.db` |
+| `reason` | Analysis, planning and decisions | `reason.analyze`, `reason.plan`, `reason.evaluate` |
+| `code` | Working on source code | `code.gen`, `code.review`, `code.exec` |
+| `tool` | System operations that change outside state | `tool.browser`, `tool.email`, `tool.github`, `tool.deploy` |
 
-### The seven categories
+### Which category wins
 
-| Category | Core nature | Example services |
-|----------|-------------|-----------------|
-| `lang` | Natural language understanding & generation | `lang.chat`, `lang.translate`, `lang.summarize` |
-| `gen` | Media content generation | `gen.image`, `gen.audio`, `gen.chart` |
-| `sense` | Perception & recognition from media | `sense.ocr`, `sense.stt`, `sense.image-classify` |
-| `data` | External data retrieval & processing | `data.search`, `data.rag`, `data.db` |
-| `reason` | Analysis, planning & decision-making | `reason.analyze`, `reason.plan`, `reason.evaluate` |
-| `code` | Source code operations | `code.gen`, `code.review`, `code.exec` |
-| `tool` | System operations with real-world side effects | `tool.browser`, `tool.email`, `tool.github` |
+When a capability fits several categories, they are applied in this order:
 
-### Naming rules
+1. it works directly on **source code** → `code.*`
+2. its main **input** is media (image / audio / video) → `sense.*`
+3. its main **output** is media → `gen.*`
+4. it **changes outside state** (writes, sends, controls) → `tool.*`
+5. it **retrieves from an external data source** → `data.*`
+6. it **analyses, plans or evaluates** → `reason.*`
+7. anything else mainly working on text → `lang.*`
 
-- All lowercase, characters `[a-z0-9.-]` only
-- Use `.` between category and function; use `-` for multi-word functions (e.g. `sense.image-classify`)
-- Maximum two levels — avoid `a.b.c`
-
-### Choosing the right category
-
-When a service fits multiple categories, apply this order:
-
-1. Works directly with **source code**? → `code.*`
-2. Primary **input** is media (image / audio / video)? → `sense.*`
-3. Primary **output** is media? → `gen.*`
-4. **Changes external state** (write, send, control)? → `tool.*`
-5. **Fetches from external sources**? → `data.*`
-6. **Reasons, plans, or evaluates**? → `reason.*`
-7. Everything else involving text → `lang.*`
-
-### Domain-specific agents
-
-Industry domains (finance, healthcare, legal) are **not** used as category prefixes — this would fragment the namespace. Express domain context through `--brief` and `--tag` instead:
+An industry domain (finance, healthcare, legal) is **not** used as a category prefix — it fragments the namespace. Express the domain through `--brief` and `--tag` instead:
 
 ```bash
-# Publish a financial analysis agent under reason.analyze
 a2al publish reason.analyze \
   --name "FinSight" \
-  --brief "Equity market trend analysis using quantitative models" \
+  --brief "Stock market trend analysis built on quantitative models" \
   --tag finance \
-  --tag quantitative
-
-# Discover with domain filter
-a2al search reason.analyze --filter-tag finance
+  --tag quantitative \
+  --protocol a2a
 ```
 
----
+## Related pages
 
-## Remove a service
-
-```bash
-# CLI
-a2al unpublish lang.translate
-
-# REST API
-curl -X DELETE http://127.0.0.1:2121/agents/<aid>/services/lang.translate \
-  -H "Content-Type: application/json" -d '{}'
-```
-
-The DHT entry expires after its TTL. The daemon stops renewing it immediately.
-
----
-
-## What's next
-
-- [Discover & Connect Agents](/docs/user/discover-connect) — search by capability and establish connections
-- [Service Categories reference](/docs/spec/protocol) — full taxonomy and naming spec
+| Goal | Page |
+| --- | --- |
+| Finding and connecting by capability | [Discover & Connect Agents](/docs/user/discover-connect) |
+| Binding a local service to an AID | [Let Others Call You](/docs/user/inbound) |
+| Which of the five channels fits which situation | [Choose the Right Channel](/docs/user/choose-channels) |

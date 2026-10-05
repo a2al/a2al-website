@@ -1,0 +1,40 @@
+---
+import { Badge } from '@astrojs/starlight/components'
+
+// Matches Starlight's own PAGE_TITLE_ID (`@astrojs/starlight/constants` is not
+// in the package export map, so the literal is used here instead).
+const PAGE_TITLE_ID = '_top'
+
+const { entry } = Astro.locals.starlightRoute
+const { title, stage } = entry.data
+const locale = Astro.locals.starlightRoute.locale ?? 'en'
+const devLabel = locale.startsWith('zh') ? '开发中' : locale.startsWith('ja') ? '開発中' : 'In development'
+const stageText = stage === 'dev' ? devLabel : stage === 'beta' ? 'Beta' : undefined
+---
+
+<h1 id={PAGE_TITLE_ID}>
+  {title}
+  {stageText && <Badge text={stageText} variant="caution" size="small" class="stage-badge" />}
+</h1>
+
+<style>
+  @layer starlight.core {
+    h1 {
+      margin-top: 1rem;
+      font-size: var(--sl-text-h1);
+      line-height: var(--sl-line-height-headings);
+      font-weight: 600;
+      color: var(--sl-color-white);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .stage-badge {
+      font-size: var(--sl-text-sm);
+      line-height: 1;
+      vertical-align: middle;
+    }
+  }
+</style>

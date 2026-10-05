@@ -1,7 +1,7 @@
-﻿---
+---
 title: Mobile & Edge Devices
-description: Run a2ald on mobile or resource-constrained devices.
+description: Run agents on phones, tablets and edge devices, within the constraints of weak networks and battery life.
+audience: user
 ---
 
-> This page is coming soon.
-
+> This page is in progress and will be published soon.

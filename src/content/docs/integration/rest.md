@@ -1,13 +1,14 @@
-﻿---
+---
 title: REST API Quickstart
-description: A2AL REST API quickstart — call a2ald from any language over HTTP. Covers identity generation, agent registration, publish, discover, connect, and mailbox endpoints.
+description: Call a2ald over HTTP from any language — the minimal flow for generating an identity, registering, publishing, publishing capabilities, searching, calling, tunnels and notes.
+audience: developer
 ---
 
-`a2ald` exposes a local REST API at `http://127.0.0.1:2121`. Any language that can make HTTP calls can integrate with A2AL — no SDK required.
+`a2ald` exposes a local REST API on `http://127.0.0.1:2121`. Any language that can send an HTTP request can integrate, with no SDK.
 
 ## Prerequisites
 
-[Install and start `a2ald`](/quickstart). Verify it's running:
+First [install and start `a2ald`](/quickstart), then confirm it is running:
 
 ```bash
 curl http://127.0.0.1:2121/health
@@ -16,17 +17,15 @@ curl http://127.0.0.1:2121/health
 
 ## Authentication
 
-If `api_token` is configured, include it on every request:
+With `api_token` configured, every request has to carry:
 
 ```
 Authorization: Bearer <token>
 ```
 
-All mutating requests (`POST`, `PATCH`, `DELETE`) require `Content-Type: application/json`.
+Local origins need no token by default (they do when `require_local_token = true`), and non-local origins always need one. Every write request (`POST` / `PATCH` / `DELETE`) needs `Content-Type: application/json`. The administrative API caps JSON bodies at 1 MiB.
 
----
-
-## Core flow
+## The minimal flow
 
 ### 1. Generate an identity
 
@@ -36,7 +35,7 @@ curl -s -X POST http://127.0.0.1:2121/identity/generate | jq .
 
 ```json
 {
-  "aid": "a2alEKFspDoevpF...",
+  "aid": "A06aE78750B7f0a5975a9f455C98087902a4Ab15ca",
   "master_private_key_hex": "...",
   "operational_private_key_hex": "...",
   "delegation_proof_hex": "...",
@@ -44,9 +43,9 @@ curl -s -X POST http://127.0.0.1:2121/identity/generate | jq .
 }
 ```
 
-Save `master_private_key_hex` securely — it won't be shown again. You'll use `operational_private_key_hex` and `delegation_proof_hex` for all subsequent operations.
+**The master key appears once**, so keep it yourself — it is the only credential for restoring that AID and the daemon does not retain it. Later operations use `operational_private_key_hex` and `delegation_proof_hex`.
 
-### 2. Register the agent
+### 2. Register the identity
 
 ```bash
 curl -s -X POST http://127.0.0.1:2121/agents \
@@ -58,7 +57,7 @@ curl -s -X POST http://127.0.0.1:2121/agents \
   }'
 ```
 
-`service_tcp` is optional — it's the address of your local service, included in published endpoint records.
+`service_tcp` is optional: it binds a local service to that AID (the equivalent of `a2al inbound bind`).
 
 ### 3. Publish to the network
 
@@ -67,9 +66,9 @@ curl -s -X POST http://127.0.0.1:2121/agents/<aid>/publish
 # {"ok":true,"seq":1}
 ```
 
-Your agent is now discoverable on the Tangled Network.
+Once published, anyone who knows your AID can resolve you. Records carry a TTL (1 hour by default) that the daemon renews while it runs.
 
-### 4. Register a service capability
+### 4. Publish a service capability
 
 ```bash
 curl -s -X POST http://127.0.0.1:2121/agents/<aid>/services \
@@ -83,9 +82,9 @@ curl -s -X POST http://127.0.0.1:2121/agents/<aid>/services \
   }'
 ```
 
-See [Service Categories](/docs/user/publish-services) for naming conventions.
+For naming rules and categories, see [Service Naming](/docs/user/service-naming).
 
-### 5. Discover agents
+### 5. Search
 
 ```bash
 curl -s -X POST http://127.0.0.1:2121/discover \
@@ -98,7 +97,7 @@ curl -s -X POST http://127.0.0.1:2121/discover \
   "entries": [
     {
       "service": "lang.translate",
-      "aid": "a2alEKFspDoevpF...",
+      "aid": "A06aE78750B7f0a5975a9f455C98087902a4Ab15ca",
       "name": "My Translation Agent",
       "brief": "Specialized in legal document translation.",
       "protocols": ["http"],
@@ -108,19 +107,51 @@ curl -s -X POST http://127.0.0.1:2121/discover \
 }
 ```
 
-### 6. Connect to a remote agent
+### 6. Calling and connecting
 
 ```bash
-curl -s -X POST http://127.0.0.1:2121/connect/<remote_aid>
-# {"tunnel":"127.0.0.1:54321"}
+# an HTTP call (recommended): the equivalent of running a local gateway
+curl -s -X POST http://127.0.0.1:2121/fetch/<aid> \
+  -H "Content-Type: application/json" \
+  -d '{"method":"GET","path":"/.well-known/agent.json"}'
+# → {status, headers, body(base64), truncated}; responses cap at 4 MiB
+
+# a single TCP session
+curl -s -X POST http://127.0.0.1:2121/connect/<aid>
+# → {"tunnel":"127.0.0.1:PORT"}
+
+# a TCP connection that stays up
+curl -s -X POST http://127.0.0.1:2121/tunnel/<aid> \
+  -H "Content-Type: application/json" \
+  -d '{"local_port":2222,"idle_timeout_sec":0}'
 ```
 
-Connect your application to the returned `tunnel` address. Traffic is forwarded over an encrypted QUIC tunnel to the remote agent. The tunnel closes when your TCP connection closes.
+Point your application at the `tunnel` address that comes back, and the traffic is forwarded to the peer over an encrypted QUIC tunnel.
 
----
+## Endpoints at a glance
 
-## What's next
+| Purpose | Endpoints |
+| --- | --- |
+| Identity and registration | `POST /identity/generate`, `POST /agents`, `GET /agents`, `PATCH /agents/{aid}`, `GET /agents/{aid}/export` (local only) |
+| Publishing and records | `POST /agents/{aid}/publish`, `POST /agents/{aid}/records` (custom RecType `0x02`–`0x0f`) |
+| Profile | `POST` / `DELETE /agents/{aid}/profile` |
+| Capabilities and search | `POST /agents/{aid}/services`, `DELETE /agents/{aid}/services/{service}`, `POST /discover` |
+| Resolve | `POST /resolve/{aid}`, `GET /resolve/{aid}/records?type=0` |
+| Calls / connections | `POST /fetch/{aid}`, `POST /connect/{aid}`, `POST /tunnel/{aid}` (plus `GET` / `DELETE` / `reset`) |
+| Notes | `POST /agents/{aid}/mailbox/send`, `POST /agents/{aid}/mailbox/poll` |
+| Chats | `/agents/{aid}/chat/{request,accept,refuse,remove,block,send,mark-read,contacts,peers/{peer}}` |
+| Rooms (read-only) | `GET /agents/{aid}/groups`, `.../groups/{group_id}`, `.../entries`; writes go through `POST /mcp/call` |
+| Objects (CAS) | `POST /agents/{aid}/cas`, `GET|HEAD /aid/{holder}/cas/{object_id}` |
+| ACL | `GET` / `PATCH /agents/{aid}/acl`, `POST .../acl/allow`, `POST .../acl/deny` |
+| Events | `GET /agents/{aid}/events` (SSE), `GET /events` (node-level) |
+| Node | `GET` / `PATCH /node/remote-admin`, `GET` / `PUT /node/address-book`, `GET /aid/{AID}/{path}` |
 
-- [REST API Reference](/docs/reference/rest-api) — complete endpoint documentation
-- [Go SDK](/docs/integration/go-sdk) — embed A2AL directly in Go programs
-- [Python Sidecar](/docs/integration/python) — Python SDK using `a2ald` as a sidecar
+The complete fields, request bodies and response structures are in the [REST API](/docs/reference/rest-api).
+
+## Related pages
+
+| Goal | Page |
+| --- | --- |
+| Every endpoint and parameter | [REST API](/docs/reference/rest-api) |
+| Wiring into AI tooling | [MCP Setup](/docs/integration/mcp) |
+| Embedding directly in Go | [Go SDK](/docs/integration/go-sdk) |

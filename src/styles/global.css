@@ -15,8 +15,18 @@
   html {
     background-color: var(--color-background);
     color: var(--color-text-primary);
-    font-family: 'Inter', system-ui, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* 针对中日文排版的换行与字距优化 */
+  :lang(zh) {
+    word-break: break-word;
+  }
+  :lang(ja) {
+    word-break: normal;
+    line-break: strict;
   }
 
   body {
@@ -48,5 +58,82 @@
   .card {
     @apply bg-surface border border-border rounded-xl p-8
            hover:border-accent/30 transition-colors duration-200;
+  }
+
+  /* ── 見出しの行間 ────────────────────────────────────────────────
+     Tailwind の text-5xl 以上は line-height:1 を持つ。欧文は字身の余白で救われるが、
+     漢字は字面が em いっぱいなので複数行になると上下がぶつかって見える。
+     ディスプレイ見出し（hero・セクションタイトル）は行間を明示的に確保する。
+     各ページの html lang は "zh-CN" / "ja" / "en" なので前方一致で拾う。 */
+  .display-heading {
+    line-height: 1.18;
+    text-wrap: pretty;
+  }
+  html[lang^='zh'] .display-heading,
+  html[lang^='ja'] .display-heading,
+  html[lang^='zh'] .hero-title,
+  html[lang^='ja'] .hero-title {
+    line-height: 1.36;
+  }
+
+  /* ヒーロー見出しは最終行の孤立語（widow）を避ける */
+  .hero-title {
+    text-wrap: pretty;
+  }
+
+  /* 日本語は見出しの字幅が広いため、ヒーローの2行目が1行に収まるサイズまで落とす（助詞だけの3行目を作らない） */
+  html[lang^='ja'] .hero-title {
+    font-size: 1.5rem;
+  }
+  @media (min-width: 640px) {
+    html[lang^='ja'] .hero-title {
+      font-size: 1.9rem;
+    }
+  }
+  @media (min-width: 768px) {
+    html[lang^='ja'] .hero-title {
+      font-size: 2.3rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    html[lang^='ja'] .hero-title {
+      font-size: 2.9rem;
+    }
+  }
+
+  /* 小型端末（〜380px）は中文の1行目が入りきらず「Agent,」だけが落ちるため、一段落とす */
+  @media (max-width: 379px) {
+    html[lang^='zh'] .hero-title {
+      font-size: 2rem;
+    }
+    html[lang^='ja'] .hero-title {
+      font-size: 1.25rem;
+    }
+  }
+
+  /* モバイルの欧文ヒーローは長文が6〜7行に割れるため、行数が収まるサイズまで落とす */
+  @media (max-width: 639px) {
+    html[lang^='en'] .hero-title {
+      font-size: 1.75rem;
+    }
+  }
+
+  /* about のヒーローは中・日の字幅が広く、既定サイズ（md:text-6xl）では
+     2行目に2〜4字だけ落ちて3行になる。いちばん長い行が本文カラムに
+     収まるまで字を落とし、中・日ともに2行へ揃える（欧文はそのまま）。 */
+  @media (min-width: 768px) {
+    html[lang^='zh'] .about-hero-title,
+    html[lang^='ja'] .about-hero-title {
+      font-size: min(3.5rem, calc((100vw - 80px) / 15.8));
+    }
+  }
+
+  /* モバイルメニュー（JS 不要の <details>）：既定マーカーを消し、開いた状態を明示する */
+  summary.menu-toggle::-webkit-details-marker {
+    display: none;
+  }
+  details[open] > summary.menu-toggle {
+    color: #ffffff;
+    border-color: rgba(0, 212, 170, 0.5);
   }
 }

@@ -1,144 +1,77 @@
 ---
 title: Discover & Connect Agents
-description: Search the network by capability and establish direct encrypted connections to remote agents.
+description: Two discovery paths — resolving a known AID and searching by capability — plus how to choose a connection for the job; identity is verified inside the handshake, with no port mapping.
+audience: user
 ---
 
-A2AL provides two ways to find a remote agent, and one way to connect to it.
+There are two ways to find the other side: **resolve directly when the AID is known**, and **search by capability when it is not**. Once you have an AID, pick the connection that suits the job.
 
----
+Typical uses: with nothing but the AID from someone's card, resolve it and then call it; knowing only that you need something like "code review", search first and pick a suitable agent from the results.
 
-## Discover by capability
-
-Search the Tangled Network for agents publishing a specific service:
+## Resolving a known AID
 
 ```bash
-# CLI
-a2al search lang.translate
-
-# With tag filter
-a2al search reason.analyze --filter-tag finance
+a2al resolve <peer-AID>      # resolve the current address record
+a2al info <peer-AID>         # read the profile
 ```
 
-```bash
-# REST API
-curl -X POST http://127.0.0.1:2121/discover \
-  -H "Content-Type: application/json" \
-  -d '{"services": ["lang.translate"], "filter": {"tags": ["legal"]}}'
-```
-
-Results include name, description, protocols, tags, and AID for every agent currently publishing that capability:
+Over REST: `POST /resolve/{aid}` (address record), `GET /resolve/{aid}/records?type=0`. The result carries the current endpoints, `nat_type`, sequence number and TTL.
 
 ```json
 {
-  "entries": [
-    {
-      "service": "lang.translate",
-      "aid": "a2alEKFspDoevpF...",
-      "name": "LexAgent",
-      "brief": "Legal document translation, EN↔ZH",
-      "protocols": ["http"],
-      "tags": ["legal", "zh-en"]
-    }
-  ]
-}
-```
-
-Filter options:
-
-| Filter | Description |
-|--------|-------------|
-| `tags` | AND-match: only agents carrying all listed tags |
-| `protocols` | AND-match: only agents supporting all listed protocols |
-
-See [Service Categories](/docs/user/publish-services) for the full list of service names.
-
----
-
-## Resolve by AID
-
-If you already know a specific agent's AID, resolve it directly to its current endpoints:
-
-```bash
-# CLI
-a2al resolve a2alEKFspDoevpF...
-
-# REST API
-curl -X POST http://127.0.0.1:2121/resolve/a2alEKFspDoevpF...
-```
-
-```json
-{
-  "aid": "a2alEKFspDoevpF...",
-  "endpoints": ["quic://1.2.3.4:4122"],
+  "aid": "A06aE78750B7f0a5975a9f455C98087902a4Ab15ca",
+  "endpoints": ["quic://203.0.113.7:4122"],
   "nat_type": 1,
   "seq": 7,
   "ttl": 3600
 }
 ```
 
----
+## Searching by capability
 
-## Connect
-
-Once you have an AID — from discovery, resolve, or a contact sharing it directly — establish an encrypted tunnel:
+When the other side has [published service capabilities](/docs/user/publish-services), search by capability name without knowing the AID first:
 
 ```bash
-# CLI
-a2al connect a2alEKFspDoevpF...
-
-# REST API
-curl -X POST http://127.0.0.1:2121/connect/a2alEKFspDoevpF...
+a2al search lang.translate                      # search by capability name
+a2al search reason.analyze --filter-tag finance # narrow by tag
+a2al search code.review --filter-protocol mcp   # narrow by protocol
 ```
 
-```json
-{"tunnel": "127.0.0.1:54321"}
-```
+Over REST: `POST /discover`, with the body `{"services":["lang.translate"],"filter":{"tags":["legal"],"protocols":["http"]}}`. Each result carries the capability name, AID, display name, brief, protocols and tags.
 
-Connect your application to the returned `tunnel` address. From your application's perspective it's a plain TCP socket — encryption, NAT traversal, and mutual identity verification happen underneath.
+| Filter | Semantics |
+| --- | --- |
+| `tags` | AND: returns only agents that carry all the listed tags |
+| `protocols` | AND: returns only agents that support all the listed protocols |
 
-The tunnel closes when your TCP connection closes. No persistent state is kept by `a2ald`.
+One capability name may match several agents, and the caller chooses — search results themselves are not an endorsement of anything.
 
-### What happens during connect
+## How to connect
 
-1. `a2ald` resolves the AID to its current endpoint record
-2. Dials all endpoint candidates concurrently (Happy Eyeballs)
-3. Both sides perform mutual TLS with certificates derived from their Ed25519 keys — identity is verified as part of the handshake
-4. If all direct dials fail and the endpoint record carries a signaling URL, falls back to ICE trickle via WebSocket
+With the AID in hand, choose by purpose; the trade-offs between channels are in [Choose the Right Channel](/docs/user/choose-channels).
 
-Your code never sees any of this. You just write to `127.0.0.1:<port>`.
+| Purpose | How |
+| --- | --- |
+| Calling the peer's HTTP / API | `a2al get <AID> <path>`, `a2al post`, `a2al_fetch`, or `http://127.0.0.1:2121/aid/{AID}/…` |
+| A single TCP session | `a2al connect <AID>` (returns a local tunnel port that ends with that connection) |
+| A TCP connection that stays up | `a2al tunnel open <AID> --local-port N` |
+| A message when the peer may be offline | `a2al note send`, `a2al chat` |
 
-### NAT and firewalls
+Both `connect` and `tunnel open` return a local port; the application connects to it as an ordinary TCP socket.
 
-`a2ald` handles NAT traversal automatically using peer reflection, UPnP, and ICE hole-punching. This works transparently for most environments — home routers, corporate NAT, cloud instances. No port forwarding or VPN required.
+## How a connection is established
 
----
+1. the AID is resolved to its current address record;
+2. all candidate endpoints are dialled concurrently;
+3. the two sides complete **mutual TLS** with certificates derived from their own Ed25519 keys — identity verification happens inside the handshake and depends on no third party;
+4. if every direct attempt fails and the address record carries a signalling address, it falls back to ICE over WebSocket.
 
-## Example: AI agent discovers and calls a specialist
+NAT traversal is handled by `a2ald` automatically (peer reflexive candidates, UPnP, ICE hole punching), so a home router, corporate NAT or cloud host normally needs no port mapping and no VPN. The few combinations where **both sides are behind symmetric NAT** need a TURN server of your own; A2AL runs no relays, and the credentials stay on your machine and are never published.
 
-```python
-from a2al import Daemon, Client
-import socket
+## Related pages
 
-with Daemon() as d:
-    c = Client(d.api_base)
-
-    # Discover a code review agent
-    results = c.discover(["code.review"])
-    aid = results["entries"][0]["aid"]
-
-    # Connect
-    tunnel = c.connect(aid)
-    host, port = tunnel["tunnel"].split(":")
-
-    # Use the tunnel like a plain TCP socket
-    with socket.create_connection((host, int(port))) as sock:
-        sock.sendall(b"please review this code...")
-        response = sock.recv(4096)
-```
-
----
-
-## What's next
-
-- [Send & Receive Messages](/docs/user/messaging) — send encrypted notes without a persistent connection
-- [Publish Service Capabilities](/docs/user/publish-services) — make your own agent discoverable
+| Goal | Page |
+| --- | --- |
+| Making yourself findable by capability name | [Publish Service Capabilities](/docs/user/publish-services) |
+| Calling the other side's HTTP service | [Connect by AID](/docs/user/connect-by-aid) |
+| Which of the five channels fits which situation | [Choose the Right Channel](/docs/user/choose-channels) |

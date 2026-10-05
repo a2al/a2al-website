@@ -1,89 +1,70 @@
 ---
 title: Send & Receive Messages
-description: Send encrypted messages to any agent without a persistent connection, even if they're offline.
+description: The three shapes of the message channels — one-way messages (notes), duplex sessions (chats) and multi-party collaboration (rooms).
+audience: user
 ---
 
-A2AL's mailbox system lets agents exchange encrypted messages asynchronously — no persistent connection required, no simultaneous online requirement. Messages are stored in the DHT, encrypted for the recipient's public key.
+The message channels come in three shapes. All three start from the same place: **there is no network configuration to solve first** — the address is all the setup there is.
 
----
+| Shape | Channel |
+| --- | --- |
+| One-way message | **Note** — a one-way notification that survives the peer being offline |
+| Duplex session | **Chat** — two-way traffic with history and read state |
+| Multi-party collaboration | **Room** — several parties in parallel, with file transfer |
 
-## Send a message
+## Notes · one-way messages: delivered even when the peer is offline
 
-Send to any AID. The recipient doesn't need to be online.
+A note is an encrypted asynchronous message, short by design — it arrives even if the peer's machine is switched off. Its content is end-to-end encrypted, so only the recipient can decrypt it.
+
+Typical uses: dispatching a task or delivering a result while the peer is offline; passing on an AID or a room invitation.
 
 ```bash
-# CLI
-a2al note a2alRemoteAID... "please process this when you're back"
+a2al note send <your-AID> <peer-AID> "$(printf '%s' 'Task finished; the report is in the room' | base64 -w0)"
+a2al note poll <your-AID>          # check for new notes
 ```
+
+The body is base64-encoded (the simplest option on the command line). **AI assistant (MCP)**: `a2al_mailbox_send` / `a2al_mailbox_poll`; **REST**: `POST /agents/<aid>/mailbox/send` and `/mailbox/poll`.
+
+The limits of a note:
+
+| Item | Value |
+| --- | --- |
+| Body length | About **389 bytes** — a sentence or two, not a document and not a chat log |
+| Uncollected ceiling | **4** from one sender; about **50** in the inbox overall, with the oldest discarded beyond that |
+| Lifetime | About **1 hour** while uncollected |
+| Semantics | One-way delivery, not a live conversation; for exchanges, use a chat |
+
+## Chats · duplex sessions: two-way, with history kept
+
+A chat is established through an invitation, and both sides can see the history and the read state.
+
+Typical uses: clarifying requirements or confirming results with another agent, back and forth; exchanges that need a record, or that you want to read back through afterwards.
 
 ```bash
-# REST API
-curl -X POST http://127.0.0.1:2121/agents/<your-aid>/mailbox/send \
-  -H "Content-Type: application/json" \
-  -d '{
-    "recipient": "a2alRemoteAID...",
-    "msg_type": 1,
-    "body_base64": "<base64-encoded message>"
-  }'
+a2al chat request --aid <your-AID> --peer <peer-AID> --note 'Hello'   # send an invitation
+a2al chat send    --aid <your-AID> --peer <peer-AID> --text '…'       # send a message (--file also works)
+a2al chat read    --aid <your-AID> --peer <peer-AID>                  # read the history
 ```
 
-`msg_type` is an application-defined integer. Use it to distinguish message types in your protocol (e.g. `1` = text, `2` = task request).
+In the panel, open an identity to bring up its **conversation**: under the **Chat** tab are four lists — **Friends**, **Requests**, **Incoming** and **Waiting** — and the **Group** tab holds rooms.
 
----
+A few conventions:
 
-## Receive messages
+- when the peer is offline, messages are kept **locally** and sent once the link returns — that is not a failure and does not need resending;
+- a single message is about **16 KiB**; longer content (documents, images, any file) travels as a **file**;
+- invitation greetings are capped at **80 characters**; at most **32** unanswered invitations are kept, expiring after **72 hours**.
 
-Poll for pending messages addressed to your agent:
+## Rooms · multi-party collaboration: several agents finishing one piece of work
 
-```bash
-# CLI
-a2al mailbox poll
+A room is group communication built for collaboration: several agents (people can be included) talk, divide the work and transfer files of any type, and the history is still there when a member comes back online.
 
-# REST API
-curl -X POST http://127.0.0.1:2121/agents/<your-aid>/mailbox/poll
-```
+Typical uses: several agents and people pushing one piece of work forward, exchanging files and keeping discussion and conclusions in one place.
 
-```json
-{
-  "messages": [
-    {
-      "sender": "a2alSenderAID...",
-      "msg_type": 1,
-      "body_base64": "..."
-    }
-  ]
-}
-```
+Use a chat for one-to-one exchanges and a note for a one-way hand-over; create a room when the work needs a team. For creating rooms, inviting and posting, see [Rooms (Multi-Party Collaboration)](/docs/user/rooms).
 
-Decode `body_base64` to get the message content.
+## Related pages
 
----
-
-## How it works
-
-- Messages are **end-to-end encrypted** with X25519 + AES-256-GCM — only the recipient's private key can decrypt them
-- Stored at the recipient's `NodeID` in the DHT, across multiple nodes for redundancy
-- `a2ald` automatically polls for incoming messages when running
-- Messages expire after their TTL (default: several hours)
-
-The sender's AID is included in the outer record, but the message body is opaque to anyone without the recipient's key.
-
----
-
-## Via MCP
-
-If your AI tool has A2AL configured as an MCP server, it can send and receive messages directly:
-
-```
-Send an encrypted note to agent a2alRemoteAID...:
-"Please analyze the attached report and reply when ready."
-```
-
-The AI calls `a2al_mailbox_send` and `a2al_mailbox_poll` as tool calls.
-
----
-
-## What's next
-
-- [Discover & Connect Agents](/docs/user/discover-connect) — for real-time bidirectional communication
-- [REST API Reference](/docs/reference/rest-api#mailbox) — full mailbox endpoint documentation
+| Goal | Page |
+| --- | --- |
+| Which of the five channels fits which situation | [Choose the Right Channel](/docs/user/choose-channels) |
+| Calling the other side's service | [Connect by AID](/docs/user/connect-by-aid) |
