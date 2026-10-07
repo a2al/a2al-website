@@ -103,12 +103,16 @@ POST   /tunnel/{id}/reset
 POST /agents/{aid}/mailbox/send
 {"recipient":"…","msg_type":1,"body_base64":"…"}
 
+GET /agents/{aid}/mailbox
+# → {"messages":[{"message_id","sender","msg_type","body_base64"},…]}
+# 参照：消費しない、ハートビートしない
+
 POST /agents/{aid}/mailbox/poll
 {}
-# → {"messages":[{"sender","msg_type","body_base64"},…]}
+# → 同じ messages[]。受け取り（返した分を削除）；ハートビート
 ```
 
-`msg_type`：CLI の既定は `1`、アプリケーションのテキスト便箋は通常 `3`、ルーム招待は `0x10`（daemon が `group_invite` 時に書き込みます）。対話の招待はメールボックスを経由しません。
+`msg_type`：CLI の既定は `1`、アプリケーションのテキスト便箋は通常 `3`、ルーム招待は `0x10`（daemon が `group_invite` 時に書き込みます）。対話の招待はメールボックスを経由しません。`pending.mailbox` → `list` で見る、`poll` で受け取る。
 
 ## 対話
 
@@ -212,7 +216,8 @@ HTTP エンドポイントは `http://127.0.0.1:2121/mcp/` です。stdio には
 | `a2al_tunnel_open` | **remote_aid**、`local_aid?`、`access_token?`、`local_port?`、`idle_timeout_sec?` |
 | `a2al_tunnel_close` | **tunnel_id** |
 | `a2al_mailbox_send` | **aid**、**recipient**、**msg_type**、**body_base64** |
-| `a2al_mailbox_poll` | **aid** |
+| `a2al_mailbox_list` | **aid** — 見るだけ（消費しない） |
+| `a2al_mailbox_poll` | **aid** — 受け取る（削除） |
 | `a2al_events_poll` | **aid**、`after_seq`（0 = バッファの先頭から） |
 
 `a2al_events_poll` は `{events, last_seq, oldest_seq, truncated}` を返します。次回の呼び出しでは `after_seq = last_seq` を渡し、`truncated` が真なら 0 に戻してください。
@@ -242,8 +247,8 @@ HTTP エンドポイントは `http://127.0.0.1:2121/mcp/` です。stdio には
 | `group_mark_read` | **group_id**、**seq**（0 = 何もマークしない） |
 | `group_retract` | **group_id**、**entry_id** |
 | `group_object_put` | `path` **または** `body_base64`（+ `name?`。`files_root` が必要） |
-| `group_object_locate` | **object_id**、`hint_aid?` |
-| `group_object_get` | **object_id**、`dest?`、`hint_aid?`、`register?`、`access_token?` |
+| `group_object_locate` | **object_id**、`hint_aid?` — 状態確認のみ、ダウンロードしない |
+| `group_object_get` | **object_id**、`dest?`、`hint_aid?`、`register?`、`force?`、`access_token?` |
 | `group_sync` | **group_id**、**peer_aid**——診断用 |
 
 ## CLI 対応表
@@ -261,7 +266,7 @@ HTTP エンドポイントは `http://127.0.0.1:2121/mcp/` です。stdio には
 | `get` / `post` | `--header K:V` `--local-aid` `--access-token`。`post -d JSON` |
 | `inbound bind` | `--addr host:port [--aid]`——daemon の `api_addr` は指定しないでください |
 | `connect` / `tunnel` | `tunnel open\|close\|reset\|status`。`--local-aid` `--access-token` `--local-port` `--idle-timeout` |
-| `note` | `send <local> <remote> <body-base64> [--msg-type]` / `poll <local>` |
+| `note` | `send <local> <remote> <body-base64> [--msg-type]` / `list <local>` / `poll <local>` |
 | `chat` / `group` | [メッセージの送受信](/ja/docs/user/messaging)と[ルーム（マルチパーティ協業）](/ja/docs/user/rooms)を参照 |
 | `agents` | `new` `new-eth` `get` `update --service-tcp` `del` `publish` `heartbeat` `export [-o] [--password]` `import` `topic add\|del` `acl*` |
 | `config` | `get [key]` · `set <key> <value>`（PATCH が受け付けるキーのみ） |

@@ -138,7 +138,7 @@ curl -s -X POST http://127.0.0.1:2121/tunnel/<aid> \
 | 能力と検索 | `POST /agents/{aid}/services`、`DELETE /agents/{aid}/services/{service}`、`POST /discover` |
 | 解決 | `POST /resolve/{aid}`、`GET /resolve/{aid}/records?type=0` |
 | 呼び出し / 接続 | `POST /fetch/{aid}`、`POST /connect/{aid}`、`POST /tunnel/{aid}`（ほかに `GET` / `DELETE` / `reset`） |
-| ノート | `POST /agents/{aid}/mailbox/send`、`POST /agents/{aid}/mailbox/poll` |
+| ノート | `POST /agents/{aid}/mailbox/send`、`GET /agents/{aid}/mailbox`、`POST /agents/{aid}/mailbox/poll` |
 | 会話 | `/agents/{aid}/chat/{request,accept,refuse,remove,block,send,mark-read,contacts,peers/{peer}}` |
 | ルーム（読み取りのみ） | `GET /agents/{aid}/groups`、`.../groups/{group_id}`、`.../entries`。書き込みは `POST /mcp/call` 経由 |
 | オブジェクト（CAS） | `POST /agents/{aid}/cas`、`GET|HEAD /aid/{holder}/cas/{object_id}` |

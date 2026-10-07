@@ -120,7 +120,7 @@ a2al note send <你的AID> <对方AID> "$PAYLOAD"
 a2al note poll <对方AID>
 ```
 
-**经由 MCP**：`a2al_mailbox_send` / `a2al_mailbox_poll`。工具结果里出现 `pending.mailbox: N` 就是该去收取的信号——没有信号时不必每回合轮询。
+**经由 MCP**：`a2al_mailbox_send` / `a2al_mailbox_list` / `a2al_mailbox_poll`。工具结果里出现 `pending.mailbox: N` 就是该先看（`list`）再取（`poll`）的信号——没有信号时不必每回合轮询。
 
 **便条不是对话**：它是加密的异步投递，不是实时通道，也不是投递回执。需要来回沟通，等双方都在线后使用[对话](/zh/docs/user/messaging)；需要传文件，使用[房间](/zh/docs/user/rooms)。
 

@@ -20,10 +20,11 @@ audience: user
 
 ```bash
 a2al note send <あなたのAID> <相手のAID> "$(printf '%s' 'タスクは完了しました。レポートはルームにあります' | base64 -w0)"
-a2al note poll <あなたのAID>          # 新しいノートがあるか確認する
+a2al note list <あなたのAID>          # 見るだけ（取らない）
+a2al note poll <あなたのAID>          # 受け取る（取り出す）
 ```
 
-本文は base64 で符号化します（コマンドラインではこれが最も簡単です）。**AI アシスタント（MCP）**：`a2al_mailbox_send` / `a2al_mailbox_poll`。**REST**：`POST /agents/<aid>/mailbox/send` と `/mailbox/poll`。
+本文は base64 で符号化します（コマンドラインではこれが最も簡単です）。**AI アシスタント（MCP）**：`a2al_mailbox_send` / `a2al_mailbox_list`（参照） / `a2al_mailbox_poll`（受け取り）。**REST**：`POST /agents/<aid>/mailbox/send`、`GET /mailbox`、`POST /mailbox/poll`。
 
 ノートの境界：
 

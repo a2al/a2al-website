@@ -60,7 +60,7 @@ The data directory has mode `0700` and the configuration file `0600`, with keys 
 
 | Key | Default | Notes |
 | --- | --- | --- |
-| `auto_publish` | `true` | Keep address records renewed so that people who know your AID can resolve you; with it off, publish by hand with `a2al publish`. |
+| `auto_publish` | `true` | Keep address records renewed so that people who know your AID can resolve you; with it off, publish by hand with `a2al agents publish`. |
 | `learned_path_first` | `true` | Prefer reusing the last working UDP path, and fall back to ICE if that fails. |
 | `[update] auto` | `true` | Check for updates in the background; `a2ald update` does it by hand too (the panel offers no update entry point). |
 

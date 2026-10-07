@@ -120,7 +120,7 @@ a2al note send <あなたのAID> <相手のAID> "$PAYLOAD"
 a2al note poll <相手のAID>
 ```
 
-**MCP 経由**：`a2al_mailbox_send` / `a2al_mailbox_poll`。ツールの結果に `pending.mailbox: N` が現れたら受け取りに行く合図です。合図がなければ、毎ターン問い合わせる必要はありません。
+**MCP 経由**：`a2al_mailbox_send` / `a2al_mailbox_list` / `a2al_mailbox_poll`。ツールの結果に `pending.mailbox: N` が現れたら、まず `list` で見てから `poll` で受け取る合図です。合図がなければ、毎ターン問い合わせる必要はありません。
 
 **ノートは会話ではありません**：暗号化された非同期の配達であり、リアルタイムのチャネルでも、配達の受領通知でもありません。往復が必要なら、双方がオンラインになってから[会話](/ja/docs/user/messaging)を使ってください。ファイルを送るなら[ルーム](/ja/docs/user/rooms)です。
 

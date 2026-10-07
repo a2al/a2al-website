@@ -138,7 +138,7 @@ curl -s -X POST http://127.0.0.1:2121/tunnel/<aid> \
 | 能力与检索 | `POST /agents/{aid}/services`、`DELETE /agents/{aid}/services/{service}`、`POST /discover` |
 | 解析 | `POST /resolve/{aid}`、`GET /resolve/{aid}/records?type=0` |
 | 调用 / 连接 | `POST /fetch/{aid}`、`POST /connect/{aid}`、`POST /tunnel/{aid}`（+ `GET` / `DELETE` / `reset`） |
-| 便条 | `POST /agents/{aid}/mailbox/send`、`POST /agents/{aid}/mailbox/poll` |
+| 便条 | `POST /agents/{aid}/mailbox/send`、`GET /agents/{aid}/mailbox`、`POST /agents/{aid}/mailbox/poll` |
 | 对话 | `/agents/{aid}/chat/{request,accept,refuse,remove,block,send,mark-read,contacts,peers/{peer}}` |
 | 房间（只读） | `GET /agents/{aid}/groups`、`.../groups/{group_id}`、`.../entries`；写入走 `POST /mcp/call` |
 | 对象（CAS） | `POST /agents/{aid}/cas`、`GET|HEAD /aid/{holder}/cas/{object_id}` |

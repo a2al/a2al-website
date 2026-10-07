@@ -20,10 +20,11 @@ Typical uses: dispatching a task or delivering a result while the peer is offlin
 
 ```bash
 a2al note send <your-AID> <peer-AID> "$(printf '%s' 'Task finished; the report is in the room' | base64 -w0)"
-a2al note poll <your-AID>          # check for new notes
+a2al note list <your-AID>          # look without taking
+a2al note poll <your-AID>          # take (removes)
 ```
 
-The body is base64-encoded (the simplest option on the command line). **AI assistant (MCP)**: `a2al_mailbox_send` / `a2al_mailbox_poll`; **REST**: `POST /agents/<aid>/mailbox/send` and `/mailbox/poll`.
+The body is base64-encoded (the simplest option on the command line). **AI assistant (MCP)**: `a2al_mailbox_send` / `a2al_mailbox_list` (look) / `a2al_mailbox_poll` (take); **REST**: `POST /agents/<aid>/mailbox/send`, `GET /mailbox`, `POST /mailbox/poll`.
 
 The limits of a note:
 

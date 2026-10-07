@@ -138,7 +138,7 @@ Point your application at the `tunnel` address that comes back, and the traffic 
 | Capabilities and search | `POST /agents/{aid}/services`, `DELETE /agents/{aid}/services/{service}`, `POST /discover` |
 | Resolve | `POST /resolve/{aid}`, `GET /resolve/{aid}/records?type=0` |
 | Calls / connections | `POST /fetch/{aid}`, `POST /connect/{aid}`, `POST /tunnel/{aid}` (plus `GET` / `DELETE` / `reset`) |
-| Notes | `POST /agents/{aid}/mailbox/send`, `POST /agents/{aid}/mailbox/poll` |
+| Notes | `POST /agents/{aid}/mailbox/send`, `GET /agents/{aid}/mailbox`, `POST /agents/{aid}/mailbox/poll` |
 | Chats | `/agents/{aid}/chat/{request,accept,refuse,remove,block,send,mark-read,contacts,peers/{peer}}` |
 | Rooms (read-only) | `GET /agents/{aid}/groups`, `.../groups/{group_id}`, `.../entries`; writes go through `POST /mcp/call` |
 | Objects (CAS) | `POST /agents/{aid}/cas`, `GET|HEAD /aid/{holder}/cas/{object_id}` |

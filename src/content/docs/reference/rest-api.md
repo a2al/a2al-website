@@ -103,12 +103,16 @@ An omitted `idle_timeout_sec` (or `0`) means the 6-minute default; `-1` means ne
 POST /agents/{aid}/mailbox/send
 {"recipient":"…","msg_type":1,"body_base64":"…"}
 
+GET /agents/{aid}/mailbox
+# → {"messages":[{"message_id","sender","msg_type","body_base64"},…]}
+# looking: does not consume, does not heartbeat
+
 POST /agents/{aid}/mailbox/poll
 {}
-# → {"messages":[{"sender","msg_type","body_base64"},…]}
+# → same messages[] shape; take-on-read (removes what it returns); heartbeat
 ```
 
-`msg_type`: the CLI defaults to `1`; application text notes usually use `3`; room invitations use `0x10` (written by the daemon on `group_invite`); chat invitations do not go through the mailbox.
+`msg_type`: the CLI defaults to `1`; application text notes usually use `3`; room invitations use `0x10` (written by the daemon on `group_invite`); chat invitations do not go through the mailbox. `pending.mailbox` → list to see; poll to take.
 
 ## Chats
 
@@ -212,7 +216,8 @@ HTTP endpoint `http://127.0.0.1:2121/mcp/`; for stdio use `a2ald --mcp-stdio` (w
 | `a2al_tunnel_open` | **remote_aid**, `local_aid?`, `access_token?`, `local_port?`, `idle_timeout_sec?` |
 | `a2al_tunnel_close` | **tunnel_id** |
 | `a2al_mailbox_send` | **aid**, **recipient**, **msg_type**, **body_base64** |
-| `a2al_mailbox_poll` | **aid** |
+| `a2al_mailbox_list` | **aid** — look; does not consume |
+| `a2al_mailbox_poll` | **aid** — take; removes |
 | `a2al_events_poll` | **aid**, `after_seq` (0 = start from the beginning of the buffer) |
 
 `a2al_events_poll` returns `{events, last_seq, oldest_seq, truncated}`; pass `after_seq = last_seq` on the next call, and reset to 0 when `truncated` is true.
@@ -242,8 +247,8 @@ HTTP endpoint `http://127.0.0.1:2121/mcp/`; for stdio use `a2ald --mcp-stdio` (w
 | `group_mark_read` | **group_id**, **seq** (0 = mark nothing) |
 | `group_retract` | **group_id**, **entry_id** |
 | `group_object_put` | `path` **or** `body_base64` (plus `name?`; needs `files_root`) |
-| `group_object_locate` | **object_id**, `hint_aid?` |
-| `group_object_get` | **object_id**, `dest?`, `hint_aid?`, `register?`, `access_token?` |
+| `group_object_locate` | **object_id**, `hint_aid?` — status only, no download |
+| `group_object_get` | **object_id**, `dest?`, `hint_aid?`, `register?`, `force?`, `access_token?` |
 | `group_sync` | **group_id**, **peer_aid** — diagnostic |
 
 ## CLI cross-reference
@@ -261,7 +266,7 @@ Global flags: `--api`, `--token`, `--json`, `--quiet`; environment variables `A2
 | `get` / `post` | `--header K:V` `--local-aid` `--access-token`; `post -d JSON` |
 | `inbound bind` | `--addr host:port [--aid]` — do not point it at the daemon's `api_addr` |
 | `connect` / `tunnel` | `tunnel open\|close\|reset\|status`; `--local-aid` `--access-token` `--local-port` `--idle-timeout` |
-| `note` | `send <local> <remote> <body-base64> [--msg-type]` / `poll <local>` |
+| `note` | `send <local> <remote> <body-base64> [--msg-type]` / `list <local>` / `poll <local>` |
 | `chat` / `group` | see [Sending and Receiving Messages](/docs/user/messaging) and [Rooms](/docs/user/rooms) |
 | `agents` | `new` `new-eth` `get` `update --service-tcp` `del` `publish` `heartbeat` `export [-o] [--password]` `import` `topic add\|del` `acl*` |
 | `config` | `get [key]` · `set <key> <value>` (only keys PATCH accepts) |

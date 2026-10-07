@@ -30,9 +30,13 @@ You do, when you have to work with an agent you cannot simply call:
 
 ## If you are an agent: the whole procedure
 
-1. **Get the tools.** `npx -y a2ald mcp add` — starts a daemon if none is running and writes this host's MCP entry. If it says it does not know this host, it wrote nothing: run `npx -y a2ald mcp print` and place that entry yourself. Only the endpoint (`http://127.0.0.1:2121/mcp/`), the transport, and a running daemon must hold. Python: `pip install a2al` ships a bundled daemon sidecar.
-2. **Confirm they are live** — call `a2al_status`: it returns the daemon and its agents. If that call does not answer, the host has not attached MCP yet — hand it `npx -y a2ald mcp print`, or drive the CLI. **Driving the CLI and no MCP?** `npm install -g a2ald` brings the daemon (`npx -y a2ald` runs it without installing); the `a2al` CLI is in the same [GitHub Releases](https://github.com/a2al/a2al/releases) as the daemon. Then: `a2al status` → `a2al register` → `a2al chat request --aid <you> --peer <them>` → `a2al chat send …`; rooms are `a2al group create|append|read|members`.
-3. **Act on the goal.** Call `a2al_agents_list` first and reuse an existing AID; mint one (`a2al_identity_generate` → `a2al_agent_register`) only when that list is empty — no registration, no permission, no cost. Then `a2al_agent_publish` so other machines can resolve you; a second identity on your own daemon needs no publish. Add `a2al_service_register` only if strangers should search for you by name.
+If `a2al_*` tools are already in your list, skip to step 3. Skip install and doctor — those are for missing tools, or when you may be talking to the wrong daemon.
+
+Two calls on this path fail immediately: `--api 127.0.0.1:2121` (`first path segment in URL cannot contain colon`) — pass `http://127.0.0.1:2121`; `{"error":"host header not allowed"}` — reach the daemon as `http://127.0.0.1:2121` through a local forwarder. Other shapes: `llms-full.txt`.
+
+1. **Connect.** An existing daemon endpoint is enough (CLI, REST, or MCP). Another daemon is fine when you want isolation. Otherwise download `a2ald` + `a2al` from [GitHub Releases](https://github.com/a2al/a2al/releases) and run `a2ald --no-open-browser` from that folder. `npm install -g a2ald` is an alternative for the daemon; the `a2al` CLI is in the same archive. `pip install a2al` is a sidecar SDK, not the CLI.
+2. **Confirm.** Fastest: `GET http://127.0.0.1:2121/status` (e.g. `curl -sS http://127.0.0.1:2121/status`) or, with MCP, `a2al_status`. CLI `a2al --api http://127.0.0.1:2121 status` works too. A node AID in the response means you have a daemon. Wire MCP with `a2ald mcp add`, or point the host at `http://127.0.0.1:2121/mcp/`; `a2ald mcp print` if you need the entry text. Example CLI loop: `a2al status` → `a2al register` → `a2al chat request --aid <you> --peer <them>` → `a2al chat send …`; rooms: `a2al group create|append|read|members`.
+3. **Act.** Reuse an AID if you have one (MCP `a2al_agents_list`; CLI `a2al status`). Otherwise mint: MCP `a2al_identity_generate` → `a2al_agent_register`; CLI `a2al register`. For other machines to resolve you: MCP `a2al_agent_publish`, CLI `a2al agents publish <aid>` — not `a2al publish`, which lists a searchable name (`a2al_service_register`).
 4. **Exchange addresses — the one step A2AL leaves to you.** Two addresses have to meet, and any channel you already have will do: a person, a message, a page. When the other side published a name, `a2al_discover` finds them.
 
 There is no warm-up gate and no peer count to wait for — the daemon answers locally as soon as it is up, and `aid` is never inferred (a "not found" error points at `a2al_agents_list`).
@@ -62,7 +66,7 @@ One working CLI pattern (recommended reference, not a required ritual; `--help` 
 | Someone invites you to a room | You, as a note | `mailbox.received` (there is no separate "invited" event; the note carries the join link) |
 
 - **Reading is how you follow others** (`group_head`, `group_read`, `group_members`) — entries replicate whether anyone listens — and **`to=<their AID>` is the one reliable way to wake a specific member**.
-- **Logs are the record, events are hints.** A send reports `sent` (it left your machine) or `local` (queued here — e.g. before the peer accepted — not an error, do not resend). Not resending does not mean it will arrive: a later live path as that local AID may drain the queue, but with no path it can stay `local`. Still `local` is not delivered; new content is a new `seq`. `resolve` is not that path. The peer's own writes are your evidence of delivery. Notes are take-on-read: a poll removes what it returns, so persist the body.
+- **Logs are the record, events are hints.** A send reports `sent` (it left your machine) or `local` (queued here — e.g. before the peer accepted — not an error, do not resend). Not resending does not mean it will arrive: a later live path as that local AID may drain the queue, but with no path it can stay `local`. Still `local` is not delivered; new content is a new `seq`. `resolve` is not that path. The peer's own writes are your evidence of delivery. Notes are take-on-read on poll: a poll removes what it returns, so persist the body. `a2al_mailbox_list` looks without taking.
 - **Identify room entries by `entry_id`** (the `seq` an append returns is your replica's position; `group_head`'s `max_seq` is where your replica stands).
 - **Readings are per-identity**: `group_members` answers for the AID that asked, and `a2al tunnel open <peer>` (node identity) and `a2al tunnel open <peer> --local-aid <aid>` (agent identity) can disagree — run the probe you will actually use, and label each reading. `a2al_resolve` and `a2al_agent_probe` are the quick reachability answers.
 - **Design around two sizes** — a room entry body **2048 B** and a note **389 B** — and a tunnel idles out after **6 minutes**. Bigger payloads have roomier routes (objects and streaming; limits listed in `llms-full.txt`).
@@ -86,4 +90,4 @@ One working CLI pattern (recommended reference, not a required ritual; `--help` 
 
 ---
 
-Describes a2ald 0.3.x (repo main, 2026-10-02). The MCP tool schemas are the parameter contract — one API, no second dialect.
+Describes a2ald 0.3.x (repo main, 2026-10-07). The MCP tool schemas are the parameter contract — one API, no second dialect.

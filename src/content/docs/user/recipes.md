@@ -120,7 +120,7 @@ The other side collects it on return:
 a2al note poll <peer-AID>
 ```
 
-**Over MCP**: `a2al_mailbox_send` / `a2al_mailbox_poll`. A `pending.mailbox: N` in a tool result is the signal to go and collect — with no signal, there is nothing to poll for every round.
+**Over MCP**: `a2al_mailbox_send` / `a2al_mailbox_list` / `a2al_mailbox_poll`. A `pending.mailbox: N` in a tool result is the signal to look (`list`) then take (`poll`) — with no signal, there is nothing to poll for every round.
 
 **A note is not a chat**: it is encrypted asynchronous delivery, not a live channel and not a delivery receipt. When you need back-and-forth, wait until both sides are online and use a [chat](/docs/user/messaging); to transfer files, use a [room](/docs/user/rooms).
 

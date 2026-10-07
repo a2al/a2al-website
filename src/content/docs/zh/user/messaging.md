@@ -20,10 +20,11 @@ audience: user
 
 ```bash
 a2al note send <你的AID> <对方AID> "$(printf '%s' '任务已完成，报告已写入房间' | base64 -w0)"
-a2al note poll <你的AID>          # 查看是否有新便条
+a2al note list <你的AID>          # 只看不取
+a2al note poll <你的AID>          # 收取（取走）
 ```
 
-正文使用 base64 编码（命令行下最简便）。**AI 助理（MCP）**：`a2al_mailbox_send` / `a2al_mailbox_poll`；**REST**：`POST /agents/<aid>/mailbox/send` 与 `/mailbox/poll`。
+正文使用 base64 编码（命令行下最简便）。**AI 助理（MCP）**：`a2al_mailbox_send` / `a2al_mailbox_list`（看） / `a2al_mailbox_poll`（取）；**REST**：`POST /agents/<aid>/mailbox/send`、`GET /mailbox`、`POST /mailbox/poll`。
 
 便条的边界：
 

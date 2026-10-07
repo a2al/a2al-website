@@ -103,12 +103,16 @@ POST   /tunnel/{id}/reset
 POST /agents/{aid}/mailbox/send
 {"recipient":"…","msg_type":1,"body_base64":"…"}
 
+GET /agents/{aid}/mailbox
+# → {"messages":[{"message_id","sender","msg_type","body_base64"},…]}
+# 只看：不消耗、不心跳
+
 POST /agents/{aid}/mailbox/poll
 {}
-# → {"messages":[{"sender","msg_type","body_base64"},…]}
+# → 同样的 messages[]；收取即删除；心跳
 ```
 
-`msg_type`：CLI 默认 `1`；应用文本便条通常用 `3`；房间邀请为 `0x10`（由 daemon 在 `group_invite` 时写入）；对话邀请不走邮箱。
+`msg_type`：CLI 默认 `1`；应用文本便条通常用 `3`；房间邀请为 `0x10`（由 daemon 在 `group_invite` 时写入）；对话邀请不走邮箱。`pending.mailbox` → `list` 只看，`poll` 收取。
 
 ## 对话
 
@@ -212,7 +216,8 @@ HTTP 端点 `http://127.0.0.1:2121/mcp/`；stdio 用 `a2ald --mcp-stdio`（有�
 | `a2al_tunnel_open` | **remote_aid**，`local_aid?`、`access_token?`、`local_port?`、`idle_timeout_sec?` |
 | `a2al_tunnel_close` | **tunnel_id** |
 | `a2al_mailbox_send` | **aid**、**recipient**、**msg_type**、**body_base64** |
-| `a2al_mailbox_poll` | **aid** |
+| `a2al_mailbox_list` | **aid** — 只看，不消耗 |
+| `a2al_mailbox_poll` | **aid** — 收取，取走 |
 | `a2al_events_poll` | **aid**、`after_seq`（0 = 从缓冲起点开始） |
 
 `a2al_events_poll` 返回 `{events, last_seq, oldest_seq, truncated}`；下次调用传 `after_seq = last_seq`，`truncated` 为真时重置为 0。
@@ -242,8 +247,8 @@ HTTP 端点 `http://127.0.0.1:2121/mcp/`；stdio 用 `a2ald --mcp-stdio`（有�
 | `group_mark_read` | **group_id**、**seq**（0 = 不标记任何内容） |
 | `group_retract` | **group_id**、**entry_id** |
 | `group_object_put` | `path` **或** `body_base64`（+ `name?`；需要 `files_root`） |
-| `group_object_locate` | **object_id**，`hint_aid?` |
-| `group_object_get` | **object_id**，`dest?`、`hint_aid?`、`register?`、`access_token?` |
+| `group_object_locate` | **object_id**，`hint_aid?` — 只查状态，不下载 |
+| `group_object_get` | **object_id**，`dest?`、`hint_aid?`、`register?`、`force?`、`access_token?` |
 | `group_sync` | **group_id**、**peer_aid** —— 诊断用 |
 
 ## CLI 对照
@@ -261,7 +266,7 @@ HTTP 端点 `http://127.0.0.1:2121/mcp/`；stdio 用 `a2ald --mcp-stdio`（有�
 | `get` / `post` | `--header K:V` `--local-aid` `--access-token`；`post -d JSON` |
 | `inbound bind` | `--addr host:port [--aid]` —— 不要填 daemon 的 `api_addr` |
 | `connect` / `tunnel` | `tunnel open\|close\|reset\|status`；`--local-aid` `--access-token` `--local-port` `--idle-timeout` |
-| `note` | `send <local> <remote> <body-base64> [--msg-type]` / `poll <local>` |
+| `note` | `send <local> <remote> <body-base64> [--msg-type]` / `list <local>` / `poll <local>` |
 | `chat` / `group` | 见[收发消息](/zh/docs/user/messaging)与[房间（多人协作）](/zh/docs/user/rooms) |
 | `agents` | `new` `new-eth` `get` `update --service-tcp` `del` `publish` `heartbeat` `export [-o] [--password]` `import` `topic add\|del` `acl*` |
 | `config` | `get [key]` · `set <key> <value>`（仅 PATCH 可改键） |

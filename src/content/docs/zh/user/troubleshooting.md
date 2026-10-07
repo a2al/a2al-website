@@ -63,16 +63,16 @@ a2al agents probe <AID>        # 某个 AID 是否可达：TCP 连通 + DHT 记�
 
 | 检查 | 说明 |
 | --- | --- |
-| 是否已 `a2al note poll` | 便条需要收取，不会自动弹出 |
+| 是否已 `a2al note list` / `poll` | 便条需要收取；`list` 只看，`poll` 取走。不会自动弹出 |
 | 是否超过时限 | 未被收取的便条约 **1 小时**后过期 |
 | 是否被上限挤掉 | 同一发送方最多 **4** 条未收取，收件箱合计约 **50** 条，超出后最早的被丢弃 |
 | 正文是否超长 | 约 **389 字节**；更长内容改发文件或房间消息 |
 
-经 MCP 时，工具结果出现 `pending.mailbox: N` 就是应收的信号；没有信号时不必每回合轮询。
+经 MCP 时，工具结果出现 `pending.mailbox: N` 就是该先 `a2al_mailbox_list` 再 `a2al_mailbox_poll` 的信号；没有信号时不必每回合轮询。
 
 ## 房间邀请 / 对话邀请没反应
 
-- 房间邀请以**便条**送达（`msg_type 0x10`），因此同样受约 1 小时有效期限制——先 `a2al note poll`，再用 `a2al group join` 加入。
+- 房间邀请以**便条**送达（`msg_type 0x10`），因此同样受约 1 小时有效期限制——先 `a2al note list` 再 `a2al note poll`，然后用 `a2al group join` 加入。
 - `a2al group list` 只显示**已加入**的房间，为空不代表没人邀请你。
 - 对话发送时报 `not_friends`：需先 `a2al chat request` 并由对方 `accept`；重复 `chat request` 会重发邀请，用于旧名册补同步。
 - 未被回应的对话邀请最多 **32** 个，**72 小时**后失效。

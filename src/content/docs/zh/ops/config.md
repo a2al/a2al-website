@@ -60,7 +60,7 @@ audience: operator
 
 | 键 | 默认 | 说明 |
 | --- | --- | --- |
-| `auto_publish` | `true` | 保持地址记录续期，使知道你 AID 的人能解析到你；关闭后需手动 `a2al publish`。 |
+| `auto_publish` | `true` | 保持地址记录续期，使知道你 AID 的人能解析到你；关闭后需手动 `a2al agents publish`。 |
 | `learned_path_first` | `true` | 优先复用上次可用的 UDP 路径，失败再走 ICE。 |
 | `[update] auto` | `true` | 后台检查更新；也可手动 `a2ald update`（面板不提供更新入口）。 |
 

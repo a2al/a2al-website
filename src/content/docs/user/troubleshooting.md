@@ -63,16 +63,16 @@ If you really need a second **node**: use another `--data-dir` together with a d
 
 | Check | Notes |
 | --- | --- |
-| Was `a2al note poll` run | Notes have to be collected; they do not pop up on their own |
+| Was `a2al note list` / `poll` run | Notes have to be collected; `list` looks, `poll` takes (removes). They do not pop up on their own |
 | Has the deadline passed | An uncollected note expires after about **1 hour** |
 | Was it pushed out by the ceiling | At most **4** uncollected notes from one sender, and about **50** in the inbox, with the oldest discarded beyond that |
 | Is the body too long | About **389 bytes**; longer content should go as a file or a room message |
 
-Over MCP, `pending.mailbox: N` in a tool result is the signal to collect; with no signal, there is nothing to poll for every round.
+Over MCP, `pending.mailbox: N` in a tool result is the signal to look (`a2al_mailbox_list`) then take (`a2al_mailbox_poll`); with no signal, there is nothing to poll for every round.
 
 ## A room or chat invitation gets no response
 
-- a room invitation arrives as a **note** (`msg_type 0x10`), so it is subject to the same 1-hour lifetime — run `a2al note poll` first, then join with `a2al group join`;
+- a room invitation arrives as a **note** (`msg_type 0x10`), so it is subject to the same 1-hour lifetime — run `a2al note list` then `a2al note poll`, then join with `a2al group join`;
 - `a2al group list` shows only the rooms you have **already joined**, so an empty list does not mean nobody invited you;
 - sending a chat returns `not_friends`: run `a2al chat request` first and have the other side `accept`; repeating `chat request` resends the invitation, which is how an old contact list is brought back into sync;
 - at most **32** unanswered chat invitations are kept, expiring after **72 hours**.

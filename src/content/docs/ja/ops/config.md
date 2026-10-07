@@ -60,7 +60,7 @@ audience: operator
 
 | キー | 既定 | 説明 |
 | --- | --- | --- |
-| `auto_publish` | `true` | アドレス記録の更新を続け、あなたの AID を知る人が解決できるようにします。無効にすると手動で `a2al publish` が必要です。 |
+| `auto_publish` | `true` | アドレス記録の更新を続け、あなたの AID を知る人が解決できるようにします。無効にすると手動で `a2al agents publish` が必要です。 |
 | `learned_path_first` | `true` | 前回使えた UDP 経路を優先して再利用し、失敗したら ICE に切り替えます。 |
 | `[update] auto` | `true` | バックグラウンドで更新を確認します。手動の `a2ald update` も可能です（パネルに更新の入口はありません）。 |
 
